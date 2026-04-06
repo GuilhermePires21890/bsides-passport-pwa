@@ -1,0 +1,63 @@
+{
+  "app_name": "Passport BSides Porto",
+  "landing": {
+    "title": "Passport BSides Porto 2025",
+    "subtitle": "Visit sponsor booths, collect stamps and qualify for prizes!",
+    "cta": "Get started"
+  },
+  "register": {
+    "title": "Create your Passport",
+    "name": "Full name",
+    "name_placeholder": "Your name",
+    "email": "Email",
+    "email_placeholder": "your@email.com",
+    "company": "Company (optional)",
+    "company_placeholder": "Where do you work?",
+    "rgpd": "I agree that my data may be used by BSides Porto for event purposes.",
+    "rgpd_share": "I agree to share my data with event sponsors.",
+    "submit": "Create Passport",
+    "already_registered": "Already have a passport? Resume here."
+  },
+  "passport": {
+    "title": "Your Passport",
+    "progress": "{{collected}} of {{total}} stamps",
+    "qualified": "🎉 Congratulations! You are qualified for prizes!",
+    "scan_cta": "Scan QR Code",
+    "sponsors_title": "Sponsors",
+    "stamped": "Visited",
+    "not_stamped": "Not visited"
+  },
+  "scan": {
+    "title": "Scan QR Code",
+    "instruction": "Point your camera at the booth QR code",
+    "success": "Stamp collected!",
+    "already_scanned": "You already visited this booth!",
+    "invalid": "Invalid QR Code",
+    "back": "Back to Passport"
+  },
+  "qualified": {
+    "title": "🎉 Qualified!",
+    "message": "You visited all booths! Go to the staff desk to enter the prize draw.",
+    "back": "View your Passport"
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "dashboard": "Dashboard",
+    "sponsors": "Sponsors",
+    "qualified": "Qualified",
+    "export": "Export CSV",
+    "total_attendees": "Attendees",
+    "total_stamps": "Stamps",
+    "total_qualified": "Qualified",
+    "total_sponsors": "Sponsors"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong. Please try again.",
+    "back": "Back",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "add": "Add"
+  }
+}

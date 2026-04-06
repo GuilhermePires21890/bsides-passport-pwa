@@ -1,0 +1,63 @@
+{
+  "app_name": "Passport BSides Porto",
+  "landing": {
+    "title": "Passport BSides Porto 2025",
+    "subtitle": "Visita os estandes dos sponsors, colecciona carimbos e habilita-te a ganhar prémios!",
+    "cta": "Começar agora"
+  },
+  "register": {
+    "title": "Criar o teu Passport",
+    "name": "Nome completo",
+    "name_placeholder": "O teu nome",
+    "email": "Email",
+    "email_placeholder": "o.teu@email.com",
+    "company": "Empresa (opcional)",
+    "company_placeholder": "Onde trabalhas?",
+    "rgpd": "Aceito que os meus dados sejam utilizados pela organização do BSides Porto para fins do evento.",
+    "rgpd_share": "Aceito partilhar os meus dados com os sponsors do evento.",
+    "submit": "Criar Passport",
+    "already_registered": "Já tens passport? Recupera aqui."
+  },
+  "passport": {
+    "title": "O teu Passport",
+    "progress": "{{collected}} de {{total}} carimbos",
+    "qualified": "🎉 Parabéns! Estás qualificado para os prémios!",
+    "scan_cta": "Scanar QR Code",
+    "sponsors_title": "Sponsors",
+    "stamped": "Visitado",
+    "not_stamped": "Por visitar"
+  },
+  "scan": {
+    "title": "Scanar QR Code",
+    "instruction": "Aponta a câmara para o QR code do estande",
+    "success": "Carimbo registado!",
+    "already_scanned": "Já visitaste este estande!",
+    "invalid": "QR Code inválido",
+    "back": "Voltar ao Passport"
+  },
+  "qualified": {
+    "title": "🎉 Qualificado!",
+    "message": "Visitaste todos os estandes! Dirije-te ao staff para participar no sorteio de prémios.",
+    "back": "Ver o teu Passport"
+  },
+  "admin": {
+    "title": "Painel Admin",
+    "dashboard": "Dashboard",
+    "sponsors": "Sponsors",
+    "qualified": "Qualificados",
+    "export": "Exportar CSV",
+    "total_attendees": "Participantes",
+    "total_stamps": "Carimbos",
+    "total_qualified": "Qualificados",
+    "total_sponsors": "Sponsors"
+  },
+  "common": {
+    "loading": "A carregar...",
+    "error": "Algo correu mal. Tenta novamente.",
+    "back": "Voltar",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "add": "Adicionar"
+  }
+}

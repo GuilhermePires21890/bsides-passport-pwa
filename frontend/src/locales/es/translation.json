@@ -1,0 +1,63 @@
+{
+  "app_name": "Passport BSides Porto",
+  "landing": {
+    "title": "Passport BSides Porto 2025",
+    "subtitle": "¡Visita los stands de los sponsors, colecciona sellos y participa en los premios!",
+    "cta": "Empezar ahora"
+  },
+  "register": {
+    "title": "Crea tu Passport",
+    "name": "Nombre completo",
+    "name_placeholder": "Tu nombre",
+    "email": "Email",
+    "email_placeholder": "tu@email.com",
+    "company": "Empresa (opcional)",
+    "company_placeholder": "¿Dónde trabajas?",
+    "rgpd": "Acepto que mis datos sean utilizados por BSides Porto para fines del evento.",
+    "rgpd_share": "Acepto compartir mis datos con los sponsors del evento.",
+    "submit": "Crear Passport",
+    "already_registered": "¿Ya tienes passport? Recupéralo aquí."
+  },
+  "passport": {
+    "title": "Tu Passport",
+    "progress": "{{collected}} de {{total}} sellos",
+    "qualified": "🎉 ¡Felicidades! ¡Estás qualificado para los premios!",
+    "scan_cta": "Escanear QR Code",
+    "sponsors_title": "Sponsors",
+    "stamped": "Visitado",
+    "not_stamped": "Por visitar"
+  },
+  "scan": {
+    "title": "Escanear QR Code",
+    "instruction": "Apunta la cámara al código QR del stand",
+    "success": "¡Sello registrado!",
+    "already_scanned": "¡Ya visitaste este stand!",
+    "invalid": "Código QR inválido",
+    "back": "Volver al Passport"
+  },
+  "qualified": {
+    "title": "🎉 ¡Qualificado!",
+    "message": "¡Visitaste todos los stands! Dirígete al staff para participar en el sorteo de premios.",
+    "back": "Ver tu Passport"
+  },
+  "admin": {
+    "title": "Panel Admin",
+    "dashboard": "Dashboard",
+    "sponsors": "Sponsors",
+    "qualified": "Qualificados",
+    "export": "Exportar CSV",
+    "total_attendees": "Participantes",
+    "total_stamps": "Sellos",
+    "total_qualified": "Qualificados",
+    "total_sponsors": "Sponsors"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Algo salió mal. Inténtalo de nuevo.",
+    "back": "Volver",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "add": "Añadir"
+  }
+}
