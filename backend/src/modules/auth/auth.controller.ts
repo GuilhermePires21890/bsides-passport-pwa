@@ -15,6 +15,12 @@ class StaffLoginDto {
   @IsString() password: string;
 }
 
+class CreateStaffDto {
+  @IsString() name: string;
+  @IsEmail() email: string;
+  @IsString() password: string;
+}
+
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -32,5 +38,10 @@ export class AuthController {
   @Post('staff/login')
   staffLogin(@Body() dto: StaffLoginDto) {
     return this.authService.staffLogin(dto.email, dto.password);
+  }
+
+  @Post('staff/create')
+  createStaff(@Body() dto: CreateStaffDto) {
+    return this.authService.createStaff(dto.email, dto.password, dto.name);
   }
 }
