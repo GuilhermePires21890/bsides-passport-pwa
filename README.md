@@ -1,6 +1,6 @@
-# Passport BSides Porto 2025
+# Passport BSides Porto 2026
 
-Digital sponsor engagement system for BSides Porto 2025.
+Digital sponsor engagement system for BSides Porto 2026.
 Attendees scan QR codes at sponsor booths to collect stamps and qualify for prizes.
 
 ## Stack
