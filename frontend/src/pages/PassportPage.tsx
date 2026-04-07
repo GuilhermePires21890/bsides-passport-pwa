@@ -45,12 +45,22 @@ export default function PassportPage() {
   return (
     <div className="min-h-screen flex flex-col bg-brand-black pb-28">
 
-      {/* Header */}
-      <div className="px-6 pt-10 pb-5 border-b border-brand-gray2">
+    {/* Header */}
+    <div className="px-6 pt-10 pb-5 border-b border-brand-gray2 flex justify-between items-start">
+      <div>
         <p className="font-mono text-brand-green text-xs tracking-widest mb-1">[ PASSPORT ]</p>
         <h1 className="font-mono font-bold text-white text-2xl">BSides Porto 2026</h1>
         <p className="font-mono text-brand-green text-sm mt-1">{attendee.name}</p>
       </div>
+      <button
+        onClick={() => {
+          localStorage.removeItem('passport_token');
+          navigate('/');
+        }}
+        className="font-mono text-brand-muted text-xs border border-brand-gray2 px-3 py-1 rounded hover:border-brand-red hover:text-brand-red transition-colors">
+        Sair
+      </button>
+    </div>
 
       {/* Progress */}
       <div className="px-6 py-5 border-b border-brand-gray2">

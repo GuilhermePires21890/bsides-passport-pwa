@@ -1,11 +1,10 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '/api',
+  baseURL: (import.meta as any).env?.VITE_API_URL || '/api',
   headers: { 'Content-Type': 'application/json' },
 });
 
-// Attach token to every request if available
 api.interceptors.request.use(config => {
   const token = localStorage.getItem('passport_token');
   if (token) config.headers['x-attendee-token'] = token;
