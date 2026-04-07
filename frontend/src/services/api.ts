@@ -36,6 +36,7 @@ export const adminApi = {
   getQualified: (eventId: string) => api.get(`/admin/qualified?eventId=${eventId}`),
   exportCsv: (eventId: string) => api.get(`/admin/export?eventId=${eventId}`, { responseType: 'blob' }),
   getSponsorScans: (eventId: string) => api.get(`/admin/sponsors/scans?eventId=${eventId}`),
+  getAttendees: (eventId: string) => api.get(`/attendees?eventId=${eventId}`),
   createSponsor: (data: { name: string; eventId: string; boothNumber?: string }) =>
     api.post('/sponsors', data),
   updateSponsor: (id: string, data: { name?: string; boothNumber?: string }) =>
