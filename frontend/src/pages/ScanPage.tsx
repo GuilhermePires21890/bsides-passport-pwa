@@ -29,34 +29,33 @@ export default function ScanPage() {
     const scanner = new Html5Qrcode('qr-reader');
     scannerRef.current = scanner;
 
-    Html5Qrcode.getCameras().then(cameras => {
-      if (!cameras || cameras.length === 0) { setStatus('error'); return; }
-      const cameraId = cameras.length > 1
-        ? cameras.find(c => c.label.toLowerCase().includes('back') ||
-            c.label.toLowerCase().includes('rear'))?.id || cameras[0].id
-        : cameras[0].id;
-
-      scanner.start(
-        cameraId,
-        { fps: 10, qrbox: { width: 250, height: 250 } },
-        async (qrCode) => {
-          try { await scanner.stop(); } catch {}
-          const token = localStorage.getItem('passport_token');
-          if (!token) return;
-          try {
-            const res = await stampsApi.scan(token, qrCode);
-            setSponsorName(res.data.sponsorName);
-            setProgress(res.data.progress);
-            setStatus('success');
-            if (res.data.qualified) setTimeout(() => navigate('/qualified'), 2000);
-          } catch (err: any) {
-            if (err?.response?.status === 409) setStatus('duplicate');
-            else setStatus('error');
+    // Use facingMode 'environment' directly — works on iOS Safari and Android
+    // without relying on camera labels which are unreliable on mobile
+    scanner.start(
+      { facingMode: 'environment' },
+      { fps: 10, qrbox: { width: 250, height: 250 } },
+      async (qrCode) => {
+        try { await scanner.stop(); } catch {}
+        const token = localStorage.getItem('passport_token');
+        if (!token) return;
+        try {
+          const res = await stampsApi.scan(token, qrCode);
+          setSponsorName(res.data.sponsorName);
+          setProgress(res.data.progress);
+          setStatus('success');
+          // Auto-redirect to passport after 2.5s, or to qualified if completed
+          if (res.data.qualified) {
+            setTimeout(() => navigate('/qualified'), 2000);
+          } else {
+            setTimeout(() => navigate('/passport'), 2500);
           }
-        },
-        () => {}
-      ).catch(() => setStatus('error'));
-    }).catch(() => setStatus('error'));
+        } catch (err: any) {
+          if (err?.response?.status === 409) setStatus('duplicate');
+          else setStatus('error');
+        }
+      },
+      () => {}
+    ).catch(() => setStatus('error'));
 
     return () => { scannerRef.current?.stop().catch(() => {}); };
   }, []);
@@ -69,7 +68,11 @@ export default function ScanPage() {
       setSponsorName(res.data.sponsorName);
       setProgress(res.data.progress);
       setStatus('success');
-      if (res.data.qualified) setTimeout(() => navigate('/qualified'), 2000);
+      if (res.data.qualified) {
+        setTimeout(() => navigate('/qualified'), 2000);
+      } else {
+        setTimeout(() => navigate('/passport'), 2500);
+      }
     } catch (err: any) {
       if (err?.response?.status === 409) setStatus('duplicate');
     }
@@ -112,6 +115,9 @@ export default function ScanPage() {
                 {t('passport.progress', { collected: progress.collected, total: progress.total })}
               </p>
             )}
+            <p className="font-mono text-brand-muted text-xs mt-4 animate-pulse">
+              A redirigir para o passport...
+            </p>
           </div>
           <button onClick={() => navigate('/passport')}
             className="w-full max-w-xs font-mono font-bold py-4 rounded text-black text-sm uppercase tracking-widest active:scale-95 transition-all border-2"
