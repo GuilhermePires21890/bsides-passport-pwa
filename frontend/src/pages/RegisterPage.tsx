@@ -3,6 +3,44 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { authApi, eventsApi } from '../services/api';
 
+// Common email domains for typo detection
+const COMMON_DOMAINS = [
+  'gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com',
+  'sapo.pt', 'hotmail.pt', 'live.com', 'icloud.com',
+  'me.com', 'protonmail.com', 'msn.com',
+];
+
+function levenshtein(a: string, b: string): number {
+  const m = a.length, n = b.length;
+  const dp: number[][] = Array.from({ length: m + 1 }, (_, i) =>
+    Array.from({ length: n + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
+  );
+  for (let i = 1; i <= m; i++)
+    for (let j = 1; j <= n; j++)
+      dp[i][j] = a[i-1] === b[j-1]
+        ? dp[i-1][j-1]
+        : 1 + Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);
+  return dp[m][n];
+}
+
+function detectEmailTypo(email: string): string | null {
+  const parts = email.split('@');
+  if (parts.length !== 2) return null;
+  const domain = parts[1].toLowerCase();
+  if (COMMON_DOMAINS.includes(domain)) return null; // already correct
+
+  let closest: string | null = null;
+  let minDist = Infinity;
+  for (const d of COMMON_DOMAINS) {
+    const dist = levenshtein(domain, d);
+    if (dist < minDist && dist <= 2) { // max 2 char difference
+      minDist = dist;
+      closest = d;
+    }
+  }
+  return closest ? `${parts[0]}@${closest}` : null;
+}
+
 export default function RegisterPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -10,6 +48,7 @@ export default function RegisterPage() {
   const [eventId, setEventId] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [emailSuggestion, setEmailSuggestion] = useState<string | null>(null);
 
   useEffect(() => {
     eventsApi.getActive()
@@ -17,9 +56,30 @@ export default function RegisterPage() {
       .catch(() => setError('Nenhum evento activo encontrado.'));
   }, []);
 
+  const handleEmailChange = (value: string) => {
+    setForm({ ...form, email: value });
+    // Only check when email looks complete (has @ and domain with .)
+    if (value.includes('@') && value.split('@')[1]?.includes('.')) {
+      setEmailSuggestion(detectEmailTypo(value));
+    } else {
+      setEmailSuggestion(null);
+    }
+  };
+
+  const applyEmailSuggestion = () => {
+    if (!emailSuggestion) return;
+    setForm({ ...form, email: emailSuggestion });
+    setEmailSuggestion(null);
+  };
+
   const handleSubmit = async () => {
     if (!form.name || !form.email || !form.rgpdConsent) {
       setError('Preenche o nome, email e aceita os termos.');
+      return;
+    }
+    // Block submit if there's a suggestion pending — force user to decide
+    if (emailSuggestion) {
+      setError('Confirma o teu email antes de continuar.');
       return;
     }
     setLoading(true);
@@ -63,9 +123,36 @@ export default function RegisterPage() {
 
           <div>
             <label className="font-mono text-brand-green text-xs mb-1 block">{'>'} {t('register.email')} *</label>
-            <input type="email" placeholder={t('register.email_placeholder')} value={form.email}
-              onChange={e => setForm({ ...form, email: e.target.value })}
-              className="w-full bg-brand-gray text-white placeholder-brand-muted rounded px-4 py-3 text-sm font-mono outline-none border border-brand-gray2 focus:border-brand-green transition-colors" />
+            <input
+              type="email"
+              placeholder={t('register.email_placeholder')}
+              value={form.email}
+              onChange={e => handleEmailChange(e.target.value)}
+              className={`w-full bg-brand-gray text-white placeholder-brand-muted rounded px-4 py-3 text-sm font-mono outline-none border transition-colors
+                ${emailSuggestion ? 'border-brand-yellow' : 'border-brand-gray2 focus:border-brand-green'}`}
+            />
+            {/* Typo suggestion */}
+            {emailSuggestion && (
+              <div className="mt-2 border border-brand-yellow rounded px-3 py-2 flex items-center justify-between gap-2"
+                style={{ boxShadow: '0 0 8px #FFD70022' }}>
+                <p className="font-mono text-brand-yellow text-xs">
+                  ⚠ Quiseste dizer <span className="font-bold">{emailSuggestion}</span>?
+                </p>
+                <div className="flex gap-2 flex-shrink-0">
+                  <button
+                    onClick={applyEmailSuggestion}
+                    className="font-mono text-xs px-2 py-1 rounded text-black font-bold"
+                    style={{ backgroundColor: '#FFD700' }}>
+                    Sim
+                  </button>
+                  <button
+                    onClick={() => setEmailSuggestion(null)}
+                    className="font-mono text-xs px-2 py-1 rounded text-brand-muted border border-brand-gray2 hover:text-white transition-colors">
+                    Não
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           <div>
