@@ -6,6 +6,7 @@ import ScanPage from './pages/ScanPage';
 import QualifiedPage from './pages/QualifiedPage';
 import AdminLoginPage from './pages/admin/AdminLoginPage';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
+import QRCodesPage from './pages/admin/QRCodesPage';
 
 function App() {
   const token = localStorage.getItem('passport_token');
@@ -22,6 +23,7 @@ function App() {
       {/* Admin flow */}
       <Route path="/admin" element={<AdminLoginPage />} />
       <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+      <Route path="/admin/qrcodes" element={<QRCodesPage />} />
 
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/" />} />
