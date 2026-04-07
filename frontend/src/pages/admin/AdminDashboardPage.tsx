@@ -19,7 +19,6 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     const token = localStorage.getItem('staff_token');
     if (!token) { navigate('/admin'); return; }
-
     eventsApi.getActive().then(res => {
       const id = res.data.id;
       setEventId(id);
@@ -62,122 +61,158 @@ export default function AdminDashboardPage() {
   };
 
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-brand-dark">
-      <p className="text-white/50">A carregar...</p>
+    <div className="min-h-screen flex items-center justify-center bg-brand-black">
+      <p className="font-mono text-brand-green animate-pulse">{'>'} A carregar...</p>
     </div>
   );
 
+  const tabs = [
+    { key: 'dashboard', label: 'Dashboard' },
+    { key: 'sponsors', label: 'Sponsors' },
+    { key: 'qualified', label: 'Qualificados' },
+  ] as const;
+
   return (
-    <div className="min-h-screen bg-brand-dark pb-24">
+    <div className="min-h-screen bg-brand-black pb-24">
+
       {/* Header */}
-      <div className="bg-brand-mid px-6 pt-10 pb-4 flex justify-between items-start">
+      <div className="px-6 pt-10 pb-4 border-b border-brand-gray2 flex justify-between items-start">
         <div>
-          <h1 className="text-xl font-bold text-white">Painel Admin</h1>
-          <p className="text-white/40 text-sm">BSides Porto 2025 — Staff</p>
+          <p className="font-mono text-brand-green text-xs tracking-widest mb-1">[ STAFF PANEL ]</p>
+          <h1 className="font-mono font-bold text-white text-xl">Admin — BSides Porto 2026</h1>
         </div>
-        <button onClick={handleLogout} className="text-white/40 text-sm">Sair</button>
+        <button onClick={handleLogout}
+          className="font-mono text-brand-muted text-xs border border-brand-gray2 px-3 py-1 rounded hover:border-brand-red hover:text-brand-red transition-colors">
+          Sair
+        </button>
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-white/10 px-6 bg-brand-mid">
-        {(['dashboard', 'sponsors', 'qualified'] as const).map(t => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={`py-3 px-4 text-sm font-medium capitalize border-b-2 transition-colors
-              ${tab === t ? 'border-brand-accent text-brand-accent' : 'border-transparent text-white/40'}`}
-          >
-            {t === 'dashboard' ? 'Dashboard' : t === 'sponsors' ? 'Sponsors' : 'Qualificados'}
+      <div className="flex border-b border-brand-gray2 px-6">
+        {tabs.map(t => (
+          <button key={t.key} onClick={() => setTab(t.key)}
+            className={`font-mono py-3 px-4 text-xs uppercase tracking-wider border-b-2 transition-colors
+              ${tab === t.key
+                ? 'border-brand-green text-brand-green'
+                : 'border-transparent text-brand-muted hover:text-white'}`}>
+            {tab === t.key ? '> ' : ''}{t.label}
           </button>
         ))}
       </div>
 
       <div className="px-6 py-6">
 
-        {/* DASHBOARD TAB */}
+        {/* DASHBOARD */}
         {tab === 'dashboard' && dashboard && (
-          <div className="grid grid-cols-2 gap-4">
-            {[
-              { label: 'Participantes', value: dashboard.totalAttendees, icon: '👥' },
-              { label: 'Sponsors', value: dashboard.totalSponsors, icon: '🏢' },
-              { label: 'Carimbos', value: dashboard.totalStamps, icon: '📮' },
-              { label: 'Qualificados', value: dashboard.totalQualified, icon: '🏆' },
-            ].map(stat => (
-              <div key={stat.label} className="bg-white/5 rounded-xl p-5 text-center border border-white/10">
-                <div className="text-3xl mb-2">{stat.icon}</div>
-                <div className="text-3xl font-bold text-white">{stat.value}</div>
-                <div className="text-white/40 text-xs mt-1">{stat.label}</div>
+          <div className="flex flex-col gap-6">
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                { label: 'Participantes', value: dashboard.totalAttendees, icon: '👥' },
+                { label: 'Sponsors',      value: dashboard.totalSponsors,  icon: '🏢' },
+                { label: 'Carimbos',      value: dashboard.totalStamps,    icon: '📮' },
+                { label: 'Qualificados',  value: dashboard.totalQualified, icon: '🏆' },
+              ].map(stat => (
+                <div key={stat.label}
+                  className="border border-brand-gray2 rounded p-5 text-center hover:border-brand-green transition-colors"
+                  style={stat.label === 'Qualificados' && stat.value > 0 ? { borderColor: '#00FF41', boxShadow: '0 0 10px #00FF4133' } : {}}>
+                  <div className="text-2xl mb-2">{stat.icon}</div>
+                  <div className="font-mono font-bold text-white text-3xl">{stat.value}</div>
+                  <div className="font-mono text-brand-muted text-xs mt-1">{stat.label}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Progress bar */}
+            {dashboard.totalAttendees > 0 && (
+              <div className="border border-brand-gray2 rounded p-4">
+                <div className="flex justify-between mb-2">
+                  <span className="font-mono text-brand-muted text-xs">Taxa de qualificação</span>
+                  <span className="font-mono text-brand-green text-xs font-bold">
+                    {Math.round((dashboard.totalQualified / dashboard.totalAttendees) * 100)}%
+                  </span>
+                </div>
+                <div className="w-full bg-brand-gray2 rounded-full h-2">
+                  <div className="h-2 rounded-full transition-all duration-700"
+                    style={{
+                      width: `${Math.round((dashboard.totalQualified / dashboard.totalAttendees) * 100)}%`,
+                      backgroundColor: '#00FF41',
+                      boxShadow: '0 0 6px #00FF41'
+                    }} />
+                </div>
               </div>
-            ))}
+            )}
           </div>
         )}
 
-        {/* SPONSORS TAB */}
+        {/* SPONSORS */}
         {tab === 'sponsors' && (
           <div className="flex flex-col gap-4">
             {/* Add sponsor */}
-            <div className="bg-white/5 rounded-xl p-4 border border-white/10 flex flex-col gap-3">
-              <p className="text-white/70 text-sm font-semibold">Adicionar Sponsor</p>
-              <input
-                placeholder="Nome do sponsor"
-                value={newSponsor.name}
+            <div className="border border-brand-gray2 rounded p-4 flex flex-col gap-3">
+              <p className="font-mono text-brand-green text-xs tracking-widest">{'>'} ADICIONAR SPONSOR</p>
+              <input placeholder="Nome do sponsor" value={newSponsor.name}
                 onChange={e => setNewSponsor({ ...newSponsor, name: e.target.value })}
-                className="bg-white/10 text-white placeholder-white/30 rounded-lg px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-brand-accent"
-              />
-              <input
-                placeholder="Nº do stand (opcional)"
-                value={newSponsor.boothNumber}
+                className="bg-brand-gray text-white placeholder-brand-muted rounded px-3 py-2 text-sm font-mono outline-none border border-brand-gray2 focus:border-brand-green transition-colors" />
+              <input placeholder="Nº do stand (opcional)" value={newSponsor.boothNumber}
                 onChange={e => setNewSponsor({ ...newSponsor, boothNumber: e.target.value })}
-                className="bg-white/10 text-white placeholder-white/30 rounded-lg px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-brand-accent"
-              />
-              <button
-                onClick={handleAddSponsor}
-                className="bg-brand-accent text-white font-semibold py-2 rounded-lg text-sm"
-              >
+                className="bg-brand-gray text-white placeholder-brand-muted rounded px-3 py-2 text-sm font-mono outline-none border border-brand-gray2 focus:border-brand-green transition-colors" />
+              <button onClick={handleAddSponsor}
+                className="font-mono font-bold py-2 rounded text-black text-xs uppercase tracking-widest active:scale-95 transition-all"
+                style={{ backgroundColor: '#00FF41', boxShadow: '0 0 10px #00FF4144' }}>
                 + Adicionar
               </button>
             </div>
 
             {/* Sponsor list */}
             {sponsors.map(s => (
-              <div key={s.id} className="bg-white/5 rounded-xl p-4 border border-white/10 flex justify-between items-center">
-                <div>
-                  <p className="text-white font-medium text-sm">{s.name}</p>
-                  <p className="text-white/40 text-xs">{s.boothNumber ? `Stand ${s.boothNumber}` : ''} · {s.scanCount} scans</p>
-                  <p className="text-white/20 text-xs font-mono mt-1">{s.qrCode}</p>
+              <div key={s.id}
+                className="border border-brand-gray2 rounded p-4 flex justify-between items-start hover:border-brand-green transition-colors">
+                <div className="flex-1 min-w-0">
+                  <p className="font-mono font-bold text-white text-sm">{s.name}</p>
+                  <p className="font-mono text-brand-muted text-xs mt-1">
+                    {s.boothNumber ? `Stand ${s.boothNumber}  ·  ` : ''}{s.scanCount} scans
+                  </p>
+                  <p className="font-mono text-brand-gray2 text-xs mt-1 truncate">{s.qrCode}</p>
                 </div>
-                <button
-                  onClick={() => handleDeleteSponsor(s.id)}
-                  className="text-brand-accent/60 hover:text-brand-accent text-sm px-2"
-                >
+                <button onClick={() => handleDeleteSponsor(s.id)}
+                  className="font-mono text-brand-muted hover:text-brand-red text-sm px-2 transition-colors flex-shrink-0">
                   ✕
                 </button>
               </div>
             ))}
+
+            {sponsors.length === 0 && (
+              <p className="font-mono text-brand-muted text-sm text-center py-8">Nenhum sponsor adicionado.</p>
+            )}
           </div>
         )}
 
-        {/* QUALIFIED TAB */}
+        {/* QUALIFIED */}
         {tab === 'qualified' && (
           <div className="flex flex-col gap-4">
             <div className="flex justify-between items-center">
-              <p className="text-white/50 text-sm">{qualified.length} qualificados</p>
-              <button
-                onClick={handleExport}
-                className="bg-brand-accent text-white text-sm font-semibold px-4 py-2 rounded-lg"
-              >
+              <p className="font-mono text-brand-muted text-xs">{qualified.length} qualificados</p>
+              <button onClick={handleExport}
+                className="font-mono font-bold text-xs px-4 py-2 rounded text-black uppercase tracking-wider active:scale-95 transition-all"
+                style={{ backgroundColor: '#00FF41', boxShadow: '0 0 10px #00FF4144' }}>
                 Exportar CSV
               </button>
             </div>
+
             {qualified.map(a => (
-              <div key={a.id} className="bg-white/5 rounded-xl p-4 border border-white/10">
-                <p className="text-white font-medium text-sm">{a.name}</p>
-                <p className="text-white/50 text-xs">{a.email}</p>
-                {a.company && <p className="text-white/40 text-xs">{a.company}</p>}
+              <div key={a.id}
+                className="border border-brand-green rounded p-4"
+                style={{ boxShadow: '0 0 6px #00FF4122' }}>
+                <p className="font-mono font-bold text-white text-sm">✓ {a.name}</p>
+                <p className="font-mono text-brand-muted text-xs mt-1">{a.email}</p>
+                {a.company && <p className="font-mono text-brand-muted text-xs">{a.company}</p>}
               </div>
             ))}
+
             {qualified.length === 0 && (
-              <p className="text-white/30 text-sm text-center py-8">Ainda nenhum participante qualificado.</p>
+              <div className="border border-brand-gray2 rounded p-8 text-center">
+                <p className="font-mono text-brand-muted text-sm">Ainda nenhum participante qualificado.</p>
+              </div>
             )}
           </div>
         )}

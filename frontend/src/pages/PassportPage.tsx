@@ -25,20 +25,17 @@ export default function PassportPage() {
   useEffect(() => {
     const token = localStorage.getItem('passport_token');
     if (!token) { navigate('/register'); return; }
-
     stampsApi.getPassport(token)
       .then(res => setData(res.data))
       .catch(() => { localStorage.removeItem('passport_token'); navigate('/register'); })
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-brand-dark">
-        <p className="text-white/50">{t('common.loading')}</p>
-      </div>
-    );
-  }
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center bg-brand-black">
+      <p className="font-mono text-brand-green animate-pulse">{'>'} A carregar...</p>
+    </div>
+  );
 
   if (!data) return null;
 
@@ -46,67 +43,67 @@ export default function PassportPage() {
   const pct = progress.total > 0 ? Math.round((progress.collected / progress.total) * 100) : 0;
 
   return (
-    <div className="min-h-screen flex flex-col bg-brand-dark pb-24">
+    <div className="min-h-screen flex flex-col bg-brand-black pb-28">
 
       {/* Header */}
-      <div className="bg-brand-mid px-6 pt-10 pb-6">
-        <p className="text-white/50 text-sm mb-1">BSides Porto 2025</p>
-        <h1 className="text-2xl font-bold text-white">{t('passport.title')}</h1>
-        <p className="text-brand-accent font-medium mt-1">{attendee.name}</p>
+      <div className="px-6 pt-10 pb-5 border-b border-brand-gray2">
+        <p className="font-mono text-brand-green text-xs tracking-widest mb-1">[ PASSPORT ]</p>
+        <h1 className="font-mono font-bold text-white text-2xl">BSides Porto 2026</h1>
+        <p className="font-mono text-brand-green text-sm mt-1">{attendee.name}</p>
       </div>
 
       {/* Progress */}
-      <div className="px-6 py-5 bg-brand-mid border-t border-white/5">
+      <div className="px-6 py-5 border-b border-brand-gray2">
         <div className="flex justify-between items-center mb-2">
-          <span className="text-white/70 text-sm">
+          <span className="font-mono text-brand-muted text-xs">
             {t('passport.progress', { collected: progress.collected, total: progress.total })}
           </span>
-          <span className="text-brand-accent font-bold text-sm">{pct}%</span>
+          <span className="font-mono text-brand-green font-bold text-sm">{pct}%</span>
         </div>
-        <div className="w-full bg-white/10 rounded-full h-2">
-          <div
-            className="bg-brand-accent h-2 rounded-full transition-all duration-500"
-            style={{ width: `${pct}%` }}
-          />
+        <div className="w-full bg-brand-gray2 rounded-full h-2">
+          <div className="h-2 rounded-full transition-all duration-700"
+            style={{ width: `${pct}%`, backgroundColor: '#00FF41', boxShadow: pct > 0 ? '0 0 8px #00FF41' : 'none' }} />
         </div>
         {qualified && (
-          <p className="text-green-400 text-sm font-semibold mt-3 text-center">
-            {t('passport.qualified')}
-          </p>
+          <div className="mt-3 border border-brand-green rounded p-3 text-center"
+            style={{ boxShadow: '0 0 12px #00FF4133' }}>
+            <p className="font-mono text-brand-green text-sm font-bold">
+              ✓ {t('passport.qualified')}
+            </p>
+          </div>
         )}
       </div>
 
-      {/* Sponsors list */}
+      {/* Sponsors */}
       <div className="px-6 py-4">
-        <h2 className="text-white/50 text-xs uppercase tracking-wider mb-4">
-          {t('passport.sponsors_title')}
-        </h2>
+        <p className="font-mono text-brand-muted text-xs uppercase tracking-widest mb-4">
+          {'>'} {t('passport.sponsors_title')}
+        </p>
         <div className="flex flex-col gap-3">
           {sponsors.map(sponsor => (
-            <div
-              key={sponsor.id}
-              className={`flex items-center gap-4 rounded-xl px-4 py-4 border transition-all
+            <div key={sponsor.id}
+              className={`flex items-center gap-4 rounded px-4 py-4 border transition-all
                 ${sponsor.stamped
-                  ? 'bg-green-500/10 border-green-500/30'
-                  : 'bg-white/5 border-white/10'}`}
-            >
-              {/* Stamp indicator */}
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg flex-shrink-0
-                ${sponsor.stamped ? 'bg-green-500/20' : 'bg-white/10'}`}>
-                {sponsor.stamped ? '✅' : '⬜'}
+                  ? 'border-brand-green bg-brand-gray'
+                  : 'border-brand-gray2 bg-brand-gray'}`}
+              style={sponsor.stamped ? { boxShadow: '0 0 8px #00FF4133' } : {}}>
+
+              {/* Status indicator */}
+              <div className={`w-8 h-8 rounded flex items-center justify-center font-mono text-sm flex-shrink-0 border
+                ${sponsor.stamped ? 'border-brand-green text-brand-green' : 'border-brand-gray2 text-brand-muted'}`}>
+                {sponsor.stamped ? '✓' : '○'}
               </div>
 
               <div className="flex-1 min-w-0">
-                <p className={`font-semibold text-sm truncate ${sponsor.stamped ? 'text-white' : 'text-white/60'}`}>
+                <p className={`font-mono font-bold text-sm truncate ${sponsor.stamped ? 'text-white' : 'text-brand-muted'}`}>
                   {sponsor.name}
                 </p>
                 {sponsor.boothNumber && (
-                  <p className="text-white/40 text-xs">Stand {sponsor.boothNumber}</p>
+                  <p className="font-mono text-brand-muted text-xs">Stand {sponsor.boothNumber}</p>
                 )}
               </div>
 
-              <span className={`text-xs font-medium flex-shrink-0
-                ${sponsor.stamped ? 'text-green-400' : 'text-white/30'}`}>
+              <span className={`font-mono text-xs flex-shrink-0 ${sponsor.stamped ? 'text-brand-green' : 'text-brand-gray2'}`}>
                 {sponsor.stamped ? t('passport.stamped') : t('passport.not_stamped')}
               </span>
             </div>
@@ -114,13 +111,12 @@ export default function PassportPage() {
         </div>
       </div>
 
-      {/* Scan button — fixed bottom */}
-      <div className="fixed bottom-0 left-0 right-0 px-6 py-4 bg-brand-dark border-t border-white/10">
-        <button
-          onClick={() => navigate('/scan')}
-          className="w-full bg-brand-accent text-white font-bold py-4 rounded-xl text-base active:scale-95 transition-transform"
-        >
-          📷 {t('passport.scan_cta')}
+      {/* Scan button fixed bottom */}
+      <div className="fixed bottom-0 left-0 right-0 px-6 py-4 bg-brand-black border-t border-brand-gray2">
+        <button onClick={() => navigate('/scan')}
+          className="w-full font-mono font-bold py-4 rounded text-black text-sm uppercase tracking-widest active:scale-95 transition-all border-2"
+          style={{ backgroundColor: '#00FF41', borderColor: '#00FF41', boxShadow: '0 0 20px #00FF4155' }}>
+          {'>'} {t('passport.scan_cta')}
         </button>
       </div>
     </div>

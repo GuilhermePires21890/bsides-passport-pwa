@@ -9,7 +9,7 @@
 body {
   margin: 0;
   font-family: 'Inter', system-ui, sans-serif;
-  background-color: #1A1A2E;
+  background-color: #000000;
   color: #ffffff;
   min-height: 100vh;
 }
@@ -18,4 +18,15 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+/* Neon glow effects */
+.neon-text {
+  color: #00FF41;
+  text-shadow: 0 0 10px #00FF41, 0 0 20px #00FF4133;
+}
+
+.neon-border {
+  border-color: #00FF41;
+  box-shadow: 0 0 8px #00FF4166;
 }

@@ -23,36 +23,37 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 bg-brand-dark">
-      <div className="w-full max-w-sm">
-        <h1 className="text-2xl font-bold text-white mb-1">Staff Login</h1>
-        <p className="text-white/40 text-sm mb-8">Passport BSides Porto 2025</p>
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 bg-brand-black relative">
+      <div className="absolute inset-0 opacity-5"
+        style={{ backgroundImage: 'linear-gradient(#00FF41 1px, transparent 1px), linear-gradient(90deg, #00FF41 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+
+      <div className="relative z-10 w-full max-w-sm">
+        <p className="font-mono text-brand-green text-xs tracking-widest mb-2">[ STAFF ACCESS ]</p>
+        <h1 className="font-mono font-bold text-white text-2xl mb-1">Admin Panel</h1>
+        <p className="font-mono text-brand-muted text-sm mb-8">BSides Porto 2026</p>
 
         <div className="flex flex-col gap-4">
-          <input
-            type="email"
-            placeholder="Email"
-            value={form.email}
-            onChange={e => setForm({ ...form, email: e.target.value })}
-            className="w-full bg-white/10 text-white placeholder-white/30 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-brand-accent"
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={form.password}
-            onChange={e => setForm({ ...form, password: e.target.value })}
-            onKeyDown={e => e.key === 'Enter' && handleLogin()}
-            className="w-full bg-white/10 text-white placeholder-white/30 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-brand-accent"
-          />
+          <div>
+            <label className="font-mono text-brand-green text-xs mb-1 block">{'>'} Email</label>
+            <input type="email" placeholder="staff@bsidesporto.pt" value={form.email}
+              onChange={e => setForm({ ...form, email: e.target.value })}
+              className="w-full bg-black text-white placeholder-brand-muted rounded px-4 py-3 text-sm font-mono outline-none border border-brand-gray2 focus:border-brand-green transition-colors" />
+          </div>
 
-          {error && <p className="text-brand-accent text-sm">{error}</p>}
+          <div>
+            <label className="font-mono text-brand-green text-xs mb-1 block">{'>'} Password</label>
+            <input type="password" placeholder="••••••••" value={form.password}
+              onChange={e => setForm({ ...form, password: e.target.value })}
+              onKeyDown={e => e.key === 'Enter' && handleLogin()}
+              className="w-full bg-black text-white placeholder-brand-muted rounded px-4 py-3 text-sm font-mono outline-none border border-brand-gray2 focus:border-brand-green transition-colors" />
+          </div>
 
-          <button
-            onClick={handleLogin}
-            disabled={loading}
-            className="w-full bg-brand-accent text-white font-semibold py-4 rounded-xl text-base disabled:opacity-50 active:scale-95 transition-transform"
-          >
-            {loading ? 'A entrar...' : 'Entrar'}
+          {error && <p className="font-mono text-brand-red text-sm">{error}</p>}
+
+          <button onClick={handleLogin} disabled={loading}
+            className="w-full font-mono font-bold py-4 rounded text-black text-sm uppercase tracking-widest disabled:opacity-40 active:scale-95 transition-all border-2 mt-2"
+            style={{ backgroundColor: '#00FF41', borderColor: '#00FF41', boxShadow: '0 0 16px #00FF4155' }}>
+            {loading ? '> A entrar...' : '> Entrar'}
           </button>
         </div>
       </div>
