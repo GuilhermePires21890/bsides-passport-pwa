@@ -64,3 +64,15 @@ model Staff {
   name      String
   createdAt DateTime @default(now())
 }
+
+model RecoveryCode {
+  id          String   @id @default(uuid())
+  email       String
+  eventId     String
+  code        String
+  expiresAt   DateTime
+  used        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([email, eventId])
+}

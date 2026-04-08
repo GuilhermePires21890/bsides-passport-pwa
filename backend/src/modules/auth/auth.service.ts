@@ -2,12 +2,14 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../../prisma/prisma.service';
 import * as bcrypt from 'bcryptjs';
+import { EmailService } from './email.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwt: JwtService,
+    private emailService: EmailService,
   ) {}
 
   // Attendee registration — returns session token
@@ -54,5 +56,59 @@ export class AuthService {
   async createStaff(email: string, password: string, name: string) {
     const hashed = await bcrypt.hash(password, 10);
     return this.prisma.staff.create({ data: { email, password: hashed, name } });
+  }
+
+  // Generate and send recovery code
+  async sendRecoveryCode(email: string, eventId: string) {
+    const attendee = await this.prisma.attendee.findUnique({
+      where: { email_eventId: { email, eventId } },
+    });
+
+    // Always return success to avoid email enumeration
+    if (!attendee) return { success: true };
+
+    // Invalidate previous unused codes
+    await this.prisma.recoveryCode.updateMany({
+      where: { email, eventId, used: false },
+      data: { used: true },
+    });
+
+    // Generate 6-char alphanumeric code
+    const code = Math.random().toString(36).substring(2, 8).toUpperCase();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+    await this.prisma.recoveryCode.create({
+      data: { email, eventId, code, expiresAt },
+    });
+
+    await this.emailService.sendRecoveryCode(email, code, attendee.name);
+    return { success: true };
+  }
+
+  // Verify recovery code and return session token
+  async verifyRecoveryCode(email: string, eventId: string, code: string) {
+    const record = await this.prisma.recoveryCode.findFirst({
+      where: {
+        email,
+        eventId,
+        code: code.toUpperCase(),
+        used: false,
+        expiresAt: { gt: new Date() },
+      },
+    });
+
+    if (!record) throw new UnauthorizedException('Código inválido ou expirado.');
+
+    // Mark code as used
+    await this.prisma.recoveryCode.update({
+      where: { id: record.id },
+      data: { used: true },
+    });
+
+    const attendee = await this.prisma.attendee.findUnique({
+      where: { email_eventId: { email, eventId } },
+    });
+
+    return { token: attendee.token };
   }
 }

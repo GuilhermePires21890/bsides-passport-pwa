@@ -46,4 +46,14 @@ export class AuthController {
   createStaff(@Body() dto: CreateStaffDto) {
     return this.authService.createStaff(dto.email, dto.password, dto.name);
   }
+
+  @Post('recover')
+  sendRecovery(@Body() body: { email: string; eventId: string }) {
+    return this.authService.sendRecoveryCode(body.email, body.eventId);
+  }
+
+  @Post('recover/verify')
+  verifyRecovery(@Body() body: { email: string; eventId: string; code: string }) {
+    return this.authService.verifyRecoveryCode(body.email, body.eventId, body.code);
+  }
 }
