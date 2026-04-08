@@ -1,5 +1,6 @@
-import { Controller, Post, Body, Get, Query } from '@nestjs/common';
+import { Controller, Post, Body, Get, Query, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { JwtAuthGuard } from './jwt-auth.guard';
 import { IsEmail, IsBoolean, IsOptional, IsString, IsUUID } from 'class-validator';
 
 class RegisterAttendeeDto {
@@ -41,6 +42,7 @@ export class AuthController {
   }
 
   @Post('staff/create')
+  @UseGuards(JwtAuthGuard)
   createStaff(@Body() dto: CreateStaffDto) {
     return this.authService.createStaff(dto.email, dto.password, dto.name);
   }
