@@ -18,6 +18,10 @@ export const authApi = {
     api.get(`/auth/resume?token=${token}`),
   staffLogin: (email: string, password: string) =>
     api.post('/auth/staff/login', { email, password }),
+  sendRecoveryCode: (email: string, eventId: string) =>
+    api.post('/auth/recover', { email, eventId }),
+  verifyRecoveryCode: (email: string, eventId: string, code: string) =>
+    api.post('/auth/recover/verify', { email, eventId, code }),
 };
 
 export const eventsApi = {

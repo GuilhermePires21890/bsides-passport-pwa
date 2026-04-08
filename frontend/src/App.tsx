@@ -7,6 +7,7 @@ import QualifiedPage from './pages/QualifiedPage';
 import AdminLoginPage from './pages/admin/AdminLoginPage';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import QRCodesPage from './pages/admin/QRCodesPage';
+import RecoverPage from './pages/RecoverPage';
 
 function App() {
   const token = localStorage.getItem('passport_token');
@@ -16,6 +17,7 @@ function App() {
       {/* Attendee flow */}
       <Route path="/" element={<LandingPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/recover" element={<RecoverPage />} />
       <Route path="/passport" element={token ? <PassportPage /> : <Navigate to="/register" />} />
       <Route path="/scan" element={token ? <ScanPage /> : <Navigate to="/register" />} />
       <Route path="/qualified" element={token ? <QualifiedPage /> : <Navigate to="/register" />} />
