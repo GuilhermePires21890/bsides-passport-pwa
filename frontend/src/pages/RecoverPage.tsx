@@ -39,9 +39,9 @@ export default function RecoverPage() {
     setError('');
     try {
       const res = await authApi.verifyRecoveryCode(email, eventId, code);
-      localStorage.setItem('passport_token', res.data.token);
-      setStep('success');
-      setTimeout(() => navigate('/passport'), 2000);
+        localStorage.setItem('passport_token', res.data.token);
+        setStep('success');
+        setTimeout(() => { window.location.href = '/passport'; }, 2000);
     } catch {
       setError('Código inválido ou expirado. Tenta novamente.');
     } finally {
