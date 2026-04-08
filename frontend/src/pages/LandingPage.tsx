@@ -72,13 +72,14 @@ export default function LandingPage() {
             <p className="font-mono text-white text-xs">ISEP, Porto</p>
           </div>
         </div>
+        {/* Recover session */}
+          <button
+            onClick={() => navigate('/recover')}
+            className="mt-4 font-mono text-brand-muted text-xs hover:text-brand-green transition-colors">
+            Já te registaste? Recupera o teu passport →
+          </button>
       </div>
-      {/* Recover session */}
-        <button
-          onClick={() => navigate('/recover')}
-          className="mt-4 font-mono text-brand-muted text-xs hover:text-brand-green transition-colors">
-          Já te registaste? Recupera o teu passport →
-        </button>
+
       {/* Footer */}
       <p className="absolute bottom-4 font-mono text-brand-muted text-xs">
         BSides Porto 2026 · Powered by Cross-Intel
