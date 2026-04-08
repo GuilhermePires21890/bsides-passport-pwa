@@ -8,7 +8,7 @@ export class AttendeesService {
   findAll(eventId: string) {
     return this.prisma.attendee.findMany({
       where: { eventId },
-      include: { _count: { select: { stamps: true } } },
+      include: { stamps: true },  // inclui stamps completos em vez de _count
       orderBy: { createdAt: 'asc' },
     });
   }
