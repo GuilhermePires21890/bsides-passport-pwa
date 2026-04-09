@@ -4,12 +4,11 @@ import RegisterPage from './pages/RegisterPage';
 import PassportPage from './pages/PassportPage';
 import ScanPage from './pages/ScanPage';
 import QualifiedPage from './pages/QualifiedPage';
+import WelcomePage from './pages/WelcomePage';
+import ResumePage from './pages/ResumePage';
 import AdminLoginPage from './pages/admin/AdminLoginPage';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import QRCodesPage from './pages/admin/QRCodesPage';
-import RecoverPage from './pages/RecoverPage';
-import WelcomePage from './pages/WelcomePage';
-import ResumePage from './pages/ResumePage';
 
 function App() {
   const token = localStorage.getItem('passport_token');
@@ -19,12 +18,11 @@ function App() {
       {/* Attendee flow */}
       <Route path="/" element={<LandingPage />} />
       <Route path="/register" element={<RegisterPage />} />
-      <Route path="/recover" element={<RecoverPage />} />
+      <Route path="/welcome" element={<WelcomePage />} />
+      <Route path="/r/:token" element={<ResumePage />} />
       <Route path="/passport" element={token ? <PassportPage /> : <Navigate to="/register" />} />
       <Route path="/scan" element={token ? <ScanPage /> : <Navigate to="/register" />} />
       <Route path="/qualified" element={token ? <QualifiedPage /> : <Navigate to="/register" />} />
-      <Route path="/welcome" element={<WelcomePage />} />
-      <Route path="/r/:token" element={<ResumePage />} />
 
       {/* Admin flow */}
       <Route path="/admin" element={<AdminLoginPage />} />

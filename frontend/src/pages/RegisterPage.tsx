@@ -187,9 +187,9 @@ export default function RegisterPage() {
             {loading ? '> A processar...' : `> ${t('register.submit')}`}
           </button>
 
-          <button onClick={() => navigate('/recover')} className="font-mono text-brand-muted text-xs text-center mt-1 hover:text-brand-green transition-colors">
-            {t('register.already_registered')}
-          </button>
+          <p className="font-mono text-brand-muted text-xs text-center mt-1">
+            Já te registaste? Abre o teu link pessoal.
+          </p>
         </div>
       </div>
     </div>

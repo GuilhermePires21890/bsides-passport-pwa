@@ -73,11 +73,9 @@ export default function LandingPage() {
           </div>
         </div>
         {/* Recover session */}
-          <button
-            onClick={() => navigate('/recover')}
-            className="mt-4 font-mono text-brand-muted text-xs hover:text-brand-green transition-colors">
-            Já tens um link pessoal? Abre-o para recuperar o passport →
-          </button>
+          <p className="mt-4 font-mono text-brand-muted text-xs text-center">
+            Já te registaste? Abre o teu link pessoal para recuperar o passport.
+          </p>
       </div>
 
       {/* Footer */}
