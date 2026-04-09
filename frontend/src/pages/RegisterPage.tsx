@@ -91,7 +91,8 @@ export default function RegisterPage() {
         rgpdConsent: form.rgpdConsent, eventId,
       });
       localStorage.setItem('passport_token', res.data.token);
-      window.location.href = '/passport';
+      localStorage.setItem('passport_name', form.name);
+      window.location.href = '/welcome';
     } catch {
       setError(t('common.error'));
     } finally {
