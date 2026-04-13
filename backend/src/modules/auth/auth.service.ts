@@ -111,4 +111,25 @@ export class AuthService {
 
     return { token: attendee.token };
   }
+
+  // Change staff password
+async changePassword(staffId: string, currentPassword: string, newPassword: string) {
+  const staff = await this.prisma.staff.findUnique({ where: { id: staffId } });
+  if (!staff) throw new UnauthorizedException('Staff não encontrado.');
+
+  const valid = await bcrypt.compare(currentPassword, staff.password);
+  if (!valid) throw new UnauthorizedException('Password actual incorrecta.');
+
+  if (newPassword.length < 8) {
+    throw new UnauthorizedException('A nova password deve ter pelo menos 8 caracteres.');
+  }
+
+  const hashed = await bcrypt.hash(newPassword, 10);
+  await this.prisma.staff.update({
+    where: { id: staffId },
+    data: { password: hashed },
+  });
+
+  return { success: true, message: 'Password alterada com sucesso.' };
+  }
 }

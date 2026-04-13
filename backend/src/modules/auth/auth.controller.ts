@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Post, Put, Body, Get, Query, UseGuards, Request } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { IsEmail, IsBoolean, IsOptional, IsString, IsUUID } from 'class-validator';
@@ -20,6 +20,11 @@ class CreateStaffDto {
   @IsString() name: string;
   @IsEmail() email: string;
   @IsString() password: string;
+}
+
+class ChangePasswordDto {
+  @IsString() currentPassword: string;
+  @IsString() newPassword: string;
 }
 
 @Controller('auth')
@@ -46,6 +51,12 @@ export class AuthController {
   createStaff(@Body() dto: CreateStaffDto) {
     return this.authService.createStaff(dto.email, dto.password, dto.name);
   }
+
+  @Put('staff/password')
+@UseGuards(JwtAuthGuard)
+changePassword(@Request() req, @Body() dto: ChangePasswordDto) {
+  return this.authService.changePassword(req.user.sub, dto.currentPassword, dto.newPassword);
+}
 
   @Post('recover')
   sendRecovery(@Body() body: { email: string; eventId: string }) {
