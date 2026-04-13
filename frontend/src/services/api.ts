@@ -22,6 +22,10 @@ export const authApi = {
     api.post('/auth/recover', { email, eventId }),
   verifyRecoveryCode: (email: string, eventId: string, code: string) =>
     api.post('/auth/recover/verify', { email, eventId, code }),
+  changePassword: (currentPassword: string, newPassword: string) =>
+  api.put('/auth/staff/password', { currentPassword, newPassword }, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('staff_token')}` }
+  }),
 };
 
 export const eventsApi = {

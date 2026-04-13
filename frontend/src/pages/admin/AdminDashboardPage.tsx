@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { adminApi, eventsApi } from '../../services/api';
+import { adminApi, authApi, eventsApi } from '../../services/api';
 
 interface Dashboard { totalSponsors: number; totalAttendees: number; totalStamps: number; totalQualified: number; }
 interface Qualified { id: string; name: string; email: string; company?: string; }
@@ -9,7 +9,7 @@ interface Attendee { id: string; name: string; email: string; company?: string; 
 
 export default function AdminDashboardPage() {
   const navigate = useNavigate();
-  const [tab, setTab] = useState<'dashboard' | 'sponsors' | 'qualified' | 'attendees'>('dashboard');
+  const [tab, setTab] = useState<'dashboard' | 'sponsors' | 'attendees' | 'qualified' | 'settings'>('dashboard');
   const [eventId, setEventId] = useState('');
   const [dashboard, setDashboard] = useState<Dashboard | null>(null);
   const [qualified, setQualified] = useState<Qualified[]>([]);
@@ -18,6 +18,12 @@ export default function AdminDashboardPage() {
   const [newSponsor, setNewSponsor] = useState({ name: '', boothNumber: '' });
   const [loading, setLoading] = useState(true);
   const [attendeesLoading, setAttendeesLoading] = useState(false);
+
+  // Password change state
+  const [pwForm, setPwForm] = useState({ current: '', newPw: '', confirm: '' });
+  const [pwLoading, setPwLoading] = useState(false);
+  const [pwError, setPwError] = useState('');
+  const [pwSuccess, setPwSuccess] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('staff_token');
@@ -37,7 +43,6 @@ export default function AdminDashboardPage() {
     }).finally(() => setLoading(false));
   }, []);
 
-  // Load attendees when tab is selected
   useEffect(() => {
     if (tab !== 'attendees' || !eventId || attendees.length > 0) return;
     setAttendeesLoading(true);
@@ -73,6 +78,33 @@ export default function AdminDashboardPage() {
     navigate('/admin');
   };
 
+  const handleChangePassword = async () => {
+    if (!pwForm.current || !pwForm.newPw || !pwForm.confirm) {
+      setPwError('Preenche todos os campos.');
+      return;
+    }
+    if (pwForm.newPw !== pwForm.confirm) {
+      setPwError('As passwords não coincidem.');
+      return;
+    }
+    if (pwForm.newPw.length < 8) {
+      setPwError('A nova password deve ter pelo menos 8 caracteres.');
+      return;
+    }
+    setPwLoading(true);
+    setPwError('');
+    try {
+      await authApi.changePassword(pwForm.current, pwForm.newPw);
+      setPwSuccess(true);
+      setPwForm({ current: '', newPw: '', confirm: '' });
+      setTimeout(() => setPwSuccess(false), 3000);
+    } catch (err: any) {
+      setPwError(err?.response?.data?.message || 'Erro ao alterar password.');
+    } finally {
+      setPwLoading(false);
+    }
+  };
+
   const formatDate = (iso: string) => {
     const d = new Date(iso);
     return d.toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
@@ -89,6 +121,7 @@ export default function AdminDashboardPage() {
     { key: 'sponsors',   label: 'Sponsors' },
     { key: 'attendees',  label: 'Participantes' },
     { key: 'qualified',  label: 'Qualificados' },
+    { key: 'settings',   label: 'Definições' },
   ] as const;
 
   return (
@@ -302,6 +335,50 @@ export default function AdminDashboardPage() {
             )}
           </div>
         )}
+
+        {/* DEFINIÇÕES */}
+        {tab === 'settings' && (
+          <div className="flex flex-col gap-4 max-w-sm">
+            <p className="font-mono text-brand-green text-xs tracking-widest">{'>'} ALTERAR PASSWORD</p>
+
+            <div>
+              <label className="font-mono text-brand-green text-xs mb-1 block">{'>'} Password actual</label>
+              <input type="password" value={pwForm.current}
+                onChange={e => { setPwForm({ ...pwForm, current: e.target.value }); setPwError(''); }}
+                className="w-full bg-brand-gray text-white rounded px-4 py-3 text-sm font-mono outline-none border border-brand-gray2 focus:border-brand-green transition-colors" />
+            </div>
+
+            <div>
+              <label className="font-mono text-brand-green text-xs mb-1 block">{'>'} Nova password</label>
+              <input type="password" value={pwForm.newPw}
+                onChange={e => { setPwForm({ ...pwForm, newPw: e.target.value }); setPwError(''); }}
+                className="w-full bg-brand-gray text-white rounded px-4 py-3 text-sm font-mono outline-none border border-brand-gray2 focus:border-brand-green transition-colors" />
+            </div>
+
+            <div>
+              <label className="font-mono text-brand-green text-xs mb-1 block">{'>'} Confirmar nova password</label>
+              <input type="password" value={pwForm.confirm}
+                onChange={e => { setPwForm({ ...pwForm, confirm: e.target.value }); setPwError(''); }}
+                className="w-full bg-brand-gray text-white rounded px-4 py-3 text-sm font-mono outline-none border border-brand-gray2 focus:border-brand-green transition-colors" />
+            </div>
+
+            {pwError && <p className="font-mono text-brand-red text-sm">{pwError}</p>}
+
+            {pwSuccess && (
+              <div className="border border-brand-green rounded p-3"
+                style={{ boxShadow: '0 0 10px #00FF4122' }}>
+                <p className="font-mono text-brand-green text-sm">✓ Password alterada com sucesso.</p>
+              </div>
+            )}
+
+            <button onClick={handleChangePassword} disabled={pwLoading}
+              className="w-full font-mono font-bold py-4 rounded text-black text-sm uppercase tracking-widest disabled:opacity-40 active:scale-95 transition-all border-2"
+              style={{ backgroundColor: '#00FF41', borderColor: '#00FF41', boxShadow: '0 0 16px #00FF4555' }}>
+              {pwLoading ? '> A alterar...' : '> Alterar password'}
+            </button>
+          </div>
+        )}
+
       </div>
     </div>
   );
