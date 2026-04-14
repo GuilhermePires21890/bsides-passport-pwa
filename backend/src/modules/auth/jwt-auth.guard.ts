@@ -18,9 +18,16 @@ export class JwtAuthGuard implements CanActivate {
 
     try {
       const payload = this.jwtService.verify(token);
+
+      // Validar campos obrigatórios no payload
+      if (!payload.sub || !payload.email || payload.role !== 'staff') {
+        throw new UnauthorizedException('Token inválido.');
+      }
+
       request.user = payload;
       return true;
-    } catch {
+    } catch (err) {
+      if (err instanceof UnauthorizedException) throw err;
       throw new UnauthorizedException('Token inválido ou expirado.');
     }
   }

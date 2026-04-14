@@ -1,4 +1,5 @@
 import { Controller, Post, Put, Body, Get, Query, UseGuards, Request } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { IsEmail, IsBoolean, IsOptional, IsString, IsUUID } from 'class-validator';
@@ -31,16 +32,19 @@ class ChangePasswordDto {
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @Throttle({ default: { ttl: 60000, limit: 5 } })
   @Post('register')
   register(@Body() dto: RegisterAttendeeDto) {
     return this.authService.registerAttendee(dto);
   }
 
+  @Throttle({ default: { ttl: 60000, limit: 10 } })
   @Get('resume')
   resume(@Query('token') token: string) {
     return this.authService.resumeByToken(token);
   }
 
+  @Throttle({ default: { ttl: 60000, limit: 5 } })
   @Post('staff/login')
   staffLogin(@Body() dto: StaffLoginDto) {
     return this.authService.staffLogin(dto.email, dto.password);
