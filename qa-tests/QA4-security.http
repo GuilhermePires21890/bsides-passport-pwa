@@ -69,6 +69,9 @@ GET {{baseUrl}}/admin/dashboard?eventId={{eventId}}
 
 ###
 
+### SEC04
+GET {{baseUrl}}/admin/dashboard?eventId={{eventId}}
+
 # ─────────────────────────────────────────
 # SEC05 — JWT manipulado manualmente
 # Esperado: 401
@@ -90,7 +93,7 @@ Content-Type: application/json
 
 {
   "name": "Rate Test",
-  "email": "sec06.ratelimit@bsidestest.com",
+  "email": "sec06.ratelimit.secund@bsidestest.com",
   "rgpdConsent": true,
   "eventId": "{{eventId}}"
 }
