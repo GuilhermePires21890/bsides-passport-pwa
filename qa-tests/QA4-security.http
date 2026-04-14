@@ -1,4 +1,4 @@
-### QA3 — BOUNDARY TEST
+### QA4 — SECURITY TEST
 ### Passport BSides Porto — 14 Abril 2026
 ### Executado por: Guilherme Pires — Cross-Intel
 
@@ -6,16 +6,16 @@
 @eventId = 2fca67a3-8b74-465c-b3fb-966cf185e4ec
 
 # ─────────────────────────────────────────
-# B01 — Registo sem nome
-# Esperado: 400
+# SEC01 — XSS no nome
+# Esperado: 400 ou nome sanitizado (sem script)
 # ─────────────────────────────────────────
-### B01
+### SEC01
 POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
-  "name": "",
-  "email": "b01@bsidestest.com",
+  "name": "<script>alert('xss')</script>",
+  "email": "sec01@bsidestest.com",
   "rgpdConsent": true,
   "eventId": "{{eventId}}"
 }
@@ -23,16 +23,37 @@ Content-Type: application/json
 ###
 
 # ─────────────────────────────────────────
-# B02 — Registo com nome de 101 caracteres
-# Esperado: 400
+# SEC02 — XSS na empresa
+# Esperado: 400 ou empresa sanitizada
 # ─────────────────────────────────────────
-### B02
+### SEC02
 POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
-  "name": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-  "email": "b02@bsidestest.com",
+  "name": "Security Test",
+  "email": "sec02@bsidestest.com",
+  "company": "<img src=x onerror=alert(1)>",
+  "rgpdConsent": true,
+  "eventId": "{{eventId}}"
+}
+
+###
+
+### SEC02-check
+GET {{baseUrl}}/auth/resume?token=3078ec50-76a5-4802-968d-2a189293fd12
+
+# ─────────────────────────────────────────
+# SEC03 — SQL Injection no email
+# Esperado: 400
+# ─────────────────────────────────────────
+### SEC03
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "Security Test",
+  "email": "' OR 1=1--@test.com",
   "rgpdConsent": true,
   "eventId": "{{eventId}}"
 }
@@ -40,89 +61,68 @@ Content-Type: application/json
 ###
 
 # ─────────────────────────────────────────
-# B03 — Registo com email inválido
-# Esperado: 400
-# ─────────────────────────────────────────
-### B03
-POST {{baseUrl}}/auth/register
-Content-Type: application/json
-
-{
-  "name": "Boundary Test",
-  "email": "nãoéumemail",
-  "rgpdConsent": true,
-  "eventId": "{{eventId}}"
-}
-
-###
-
-# ─────────────────────────────────────────
-# B04 — Registo sem eventId
-# Esperado: 400
-# ─────────────────────────────────────────
-### B04
-POST {{baseUrl}}/auth/register
-Content-Type: application/json
-
-{
-  "name": "Boundary Test",
-  "email": "b04@bsidestest.com",
-  "rgpdConsent": true,
-  "eventId": ""
-}
-
-###
-
-# ─────────────────────────────────────────
-# B05 — Registo sem RGPD
-# Esperado: 400
-# ─────────────────────────────────────────
-### B05
-POST {{baseUrl}}/auth/register
-Content-Type: application/json
-
-{
-  "name": "Boundary Test",
-  "email": "b05.novo@bsidestest.com",
-  "rgpdConsent": false,
-  "eventId": "{{eventId}}"
-}
-
-###
-
-# ─────────────────────────────────────────
-# B06 — Token inexistente no resume
+# SEC04 — Acesso admin sem JWT
 # Esperado: 401
 # ─────────────────────────────────────────
-### B06
-GET {{baseUrl}}/auth/resume?token=token-que-nao-existe-123456
+### SEC04
+GET {{baseUrl}}/admin/dashboard?eventId={{eventId}}
 
 ###
 
 # ─────────────────────────────────────────
-# B07 — Scan com QR inválido
-# Esperado: 404
+# SEC05 — JWT manipulado manualmente
+# Esperado: 401
 # ─────────────────────────────────────────
-### B07
-POST {{baseUrl}}/stamps/scan
+### SEC05
+GET {{baseUrl}}/admin/dashboard?eventId={{eventId}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmYWtlLWlkLTEyMyIsImVtYWlsIjoiYXR0YWNrZXJAaGFjay5jb20iLCJyb2xlIjoic3RhZmYiLCJpYXQiOjE3MDAwMDAwMDAsImV4cCI6OTk5OTk5OTk5OX0.fakesignature
+
+###
+
+# ─────────────────────────────────────────
+# SEC06 — Rate limit no registo (6 requests seguidos)
+# Esperado: 429 no 6º pedido
+# Corre este bloco 6 vezes seguidas rapidamente
+# ─────────────────────────────────────────
+### SEC06
+POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
-  "token": "a75e4bfc-4dcc-4630-a9d7-bc69193061e0",
-  "qrCode": "qr-code-que-nao-existe-999"
+  "name": "Rate Test",
+  "email": "sec06.ratelimit@bsidestest.com",
+  "rgpdConsent": true,
+  "eventId": "{{eventId}}"
 }
 
 ###
 
 # ─────────────────────────────────────────
-# B08 — Scan duplicado (mesmo token + mesmo QR)
-# Esperado: 409
+# SEC07 — Rate limit no login (6 requests seguidos)
+# Esperado: 429 no 6º pedido
+# Corre este bloco 6 vezes seguidas rapidamente
 # ─────────────────────────────────────────
-### B08
-POST {{baseUrl}}/stamps/scan
+### SEC07
+POST {{baseUrl}}/auth/staff/login
 Content-Type: application/json
 
 {
-  "token": "a75e4bfc-4dcc-4630-a9d7-bc69193061e0",
-  "qrCode": "9d0a3185-3e1d-48a5-97de-57c1e977b7c8"
+  "email": "attacker@hack.com",
+  "password": "wrongpassword"
+}
+
+###
+
+# ─────────────────────────────────────────
+# SEC08 — Criar staff sem JWT
+# Esperado: 401
+# ─────────────────────────────────────────
+### SEC08
+POST {{baseUrl}}/auth/staff/create
+Content-Type: application/json
+
+{
+  "name": "Fake Staff",
+  "email": "fakestaff@hack.com",
+  "password": "hacked123"
 }
