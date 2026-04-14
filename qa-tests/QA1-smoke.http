@@ -1,0 +1,37 @@
+### QA1 — SMOKE TEST
+### Passport BSides Porto — 14 Abril 2026
+### Executado por: Guilherme Pires — Cross-Intel
+
+@baseUrl = https://passport-bsides-porto-production.up.railway.app/api
+@eventId = 2fca67a3-8b74-465c-b3fb-966cf185e4ec
+
+# ─────────────────────────────────────────
+# S01 — API está online
+# Esperado: 200 + evento activo
+# ─────────────────────────────────────────
+### S01
+GET {{baseUrl}}/events/active
+
+###
+
+# ─────────────────────────────────────────
+# S02 — Sponsors carregam
+# Esperado: 200 + lista de sponsors
+# ─────────────────────────────────────────
+### S02
+GET {{baseUrl}}/sponsors?eventId={{eventId}}
+
+###
+
+# ─────────────────────────────────────────
+# S03 — Admin login responde
+# Esperado: 401 (credenciais erradas intencionais — confirmar que endpoint responde)
+# ─────────────────────────────────────────
+### S03
+POST {{baseUrl}}/auth/staff/login
+Content-Type: application/json
+
+{
+  "email": "smoke@test.com",
+  "password": "wrongpassword"
+}

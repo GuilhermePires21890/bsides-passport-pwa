@@ -15,19 +15,20 @@ export class AuthService {
   ) {}
 
   async registerAttendee(data: {
-    name: string;
-    email: string;
-    company?: string;
-    rgpdConsent: boolean;
-    eventId: string;
-  }) {
-    const name = sanitize(data.name);
-    const email = data.email.toLowerCase().trim();
-    const company = data.company ? sanitize(data.company) : undefined;
+  name: string;
+  email: string;
+  company?: string;
+  rgpdConsent: boolean;
+  eventId: string;
+}) {
+  const name = sanitize(data.name);
+  const email = data.email.toLowerCase().trim();
+  const company = data.company ? sanitize(data.company) : undefined;
 
-    if (!name) throw new BadRequestException('Nome inválido.');
-    if (name.length > 100) throw new BadRequestException('Nome demasiado longo.');
-    if (company && company.length > 100) throw new BadRequestException('Empresa demasiado longa.');
+  if (!name) throw new BadRequestException('Nome inválido.');
+  if (name.length > 100) throw new BadRequestException('Nome demasiado longo.');
+  if (company && company.length > 100) throw new BadRequestException('Empresa demasiado longa.');
+  if (!data.rgpdConsent) throw new BadRequestException('O consentimento RGPD é obrigatório.');
 
     const existing = await this.prisma.attendee.findUnique({
       where: { email_eventId: { email, eventId: data.eventId } },
