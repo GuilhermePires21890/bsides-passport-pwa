@@ -51,5 +51,4 @@ export const adminApi = {
     api.put(`/sponsors/${id}`, data),
   deleteSponsor: (id: string) => api.delete(`/sponsors/${id}`),
 };
-
 export default api;
