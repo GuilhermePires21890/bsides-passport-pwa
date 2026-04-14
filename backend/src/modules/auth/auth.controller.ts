@@ -53,18 +53,8 @@ export class AuthController {
   }
 
   @Put('staff/password')
-@UseGuards(JwtAuthGuard)
-changePassword(@Request() req, @Body() dto: ChangePasswordDto) {
-  return this.authService.changePassword(req.user.sub, dto.currentPassword, dto.newPassword);
-}
-
-  @Post('recover')
-  sendRecovery(@Body() body: { email: string; eventId: string }) {
-    return this.authService.sendRecoveryCode(body.email, body.eventId);
-  }
-
-  @Post('recover/verify')
-  verifyRecovery(@Body() body: { email: string; eventId: string; code: string }) {
-    return this.authService.verifyRecoveryCode(body.email, body.eventId, body.code);
+  @UseGuards(JwtAuthGuard)
+  changePassword(@Request() req, @Body() dto: ChangePasswordDto) {
+    return this.authService.changePassword(req.user.sub, dto.currentPassword, dto.newPassword);
   }
 }
