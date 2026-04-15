@@ -6,13 +6,13 @@ import { StampsService } from './stamps.service';
 export class StampsController {
   constructor(private stampsService: StampsService) {}
 
-  @Throttle({ default: { ttl: 60000, limit: 120 } })
+  @Throttle({ default: { ttl: 60000, limit: 600 } })
   @Post('scan')
   scan(@Body() body: { token: string; qrCode: string }) {
     return this.stampsService.scan(body.token, body.qrCode);
   }
 
-  @Throttle({ default: { ttl: 60000, limit: 120 } })
+  @Throttle({ default: { ttl: 60000, limit: 600 } })
   @Get('passport')
   getPassport(@Query('token') token: string) {
     return this.stampsService.getPassport(token);
