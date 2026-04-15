@@ -8,15 +8,14 @@ const tokens = JSON.parse(open('./tokens.json'));
 
 export const options = {
   scenarios: {
-    peak: {
-      executor: 'ramping-vus',
-      startVUs: 0,
-      stages: [
-        { duration: '30s', target: 200 },
-        { duration: '2m', target: 200 },
-        { duration: '30s', target: 0 },
-      ],
-      tags: { scenario: 'peak' },
+    stress: {
+      executor: 'constant-arrival-rate',
+      rate: 400,
+      timeUnit: '1m',
+      duration: '3m',
+      preAllocatedVUs: 800,
+      maxVUs: 800,
+      tags: { scenario: 'stress' },
     },
   },
   thresholds: {
