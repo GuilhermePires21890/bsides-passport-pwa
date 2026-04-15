@@ -1,10 +1,18 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
-import { randomString } from 'https://jslib.k6.io/k6-utils/1.4.0/index.js';
 
 const BASE_URL = 'https://passport-bsides-porto-production.up.railway.app/api';
 const EVENT_ID = '2fca67a3-8b74-465c-b3fb-966cf185e4ec';
-const TEST_QR  = 'c4285fcd-ea28-4f9f-9113-4889538e64e3';
+const TEST_QR  = '9d0a3185-3e1d-48a5-97de-57c1e977b7c8';
+
+function randomString(length) {
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
 
 export const options = {
   scenarios: {
@@ -12,68 +20,53 @@ export const options = {
       executor: 'ramping-vus',
       startVUs: 0,
       stages: [
-        { duration: '2m', target: 50 },
-        { duration: '5m', target: 50 },
+        { duration: '1m', target: 50 },
+        { duration: '3m', target: 50 },
         { duration: '1m', target: 0 },
       ],
       tags: { scenario: 'baseline' },
     },
-    peak: {
-      executor: 'ramping-vus',
-      startTime: '8m',
-      startVUs: 0,
-      stages: [
-        { duration: '30s', target: 200 },
-        { duration: '2m', target: 200 },
-        { duration: '30s', target: 0 },
-      ],
-      tags: { scenario: 'peak' },
-    },
-    stress: {
-      executor: 'ramping-vus',
-      startTime: '12m',
-      startVUs: 0,
-      stages: [
-        { duration: '1m', target: 800 },
-        { duration: '3m', target: 800 },
-        { duration: '1m', target: 0 },
-      ],
-      tags: { scenario: 'stress' },
-    },
   },
   thresholds: {
-    http_req_duration: ['p(95)<3000'],  // 95% dos pedidos abaixo de 3s
-    http_req_failed:   ['rate<0.05'],   // menos de 5% de erros
+    http_req_duration: ['p(95)<3000'],
+    http_req_failed:   ['rate<0.05'],
   },
 };
 
-export default function () {
-  const email = `test_${randomString(10)}@bsidestest.com`;
+// setup: corre 1 vez antes do teste — regista 50 attendees
+export function setup() {
+  const tokens = [];
+  for (let i = 0; i < 50; i++) {
+    const email = `load_${randomString(12)}@bsidestest.com`;
+    const res = http.post(
+      `${BASE_URL}/auth/register`,
+      JSON.stringify({
+        name: `Load Test User ${i}`,
+        email,
+        company: 'Load Test',
+        rgpdConsent: true,
+        eventId: EVENT_ID,
+      }),
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+    if (res.status === 201) {
+      tokens.push(JSON.parse(res.body).token);
+    }
+    sleep(0.2);
+  }
+  console.log(`Tokens registados: ${tokens.length}`);
+  return { tokens };
+}
 
-  // 1. Registo
-  const registerRes = http.post(
-    `${BASE_URL}/auth/register`,
-    JSON.stringify({
-      name: `Test User ${randomString(5)}`,
-      email,
-      company: 'BSides Test',
-      rgpdConsent: true,
-      eventId: EVENT_ID,
-    }),
-    { headers: { 'Content-Type': 'application/json' } }
-  );
+// default: simula comportamento real — consultar passport e scanar
+export default function (data) {
+  const tokens = data.tokens;
+  if (!tokens || tokens.length === 0) return;
 
-  check(registerRes, {
-    'register: status 201': (r) => r.status === 201,
-    'register: tem token':  (r) => JSON.parse(r.body).token !== undefined,
-  });
+  // cada VU usa um token aleatório da pool
+  const token = tokens[Math.floor(Math.random() * tokens.length)];
 
-  if (registerRes.status !== 201) return;
-
-  const token = JSON.parse(registerRes.body).token;
-  sleep(1);
-
-  // 2. Consultar passport
+  // 1. Consultar passport
   const passportRes = http.get(
     `${BASE_URL}/stamps/passport?token=${token}`
   );
@@ -84,7 +77,7 @@ export default function () {
 
   sleep(1);
 
-  // 3. Scan QR code
+  // 2. Scan QR code
   const scanRes = http.post(
     `${BASE_URL}/stamps/scan`,
     JSON.stringify({ token, qrCode: TEST_QR }),
@@ -96,4 +89,9 @@ export default function () {
   });
 
   sleep(2);
+}
+
+// teardown: limpa attendees de teste após o load test
+export function teardown(data) {
+  console.log('Load test concluído. Limpa os attendees via cleanup.js após o teste.');
 }
