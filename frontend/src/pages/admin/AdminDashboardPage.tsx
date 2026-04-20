@@ -19,6 +19,12 @@ export default function AdminDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [attendeesLoading, setAttendeesLoading] = useState(false);
 
+  // Edit sponsor state
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState({ name: '', boothNumber: '' });
+  const [editLoading, setEditLoading] = useState(false);
+  const [editError, setEditError] = useState('');
+
   // Password change state
   const [pwForm, setPwForm] = useState({ current: '', newPw: '', confirm: '' });
   const [pwLoading, setPwLoading] = useState(false);
@@ -53,7 +59,7 @@ export default function AdminDashboardPage() {
   }, [tab, eventId]);
 
   const handleAddSponsor = async () => {
-    if (!newSponsor.name) return;
+    if (!newSponsor.name.trim()) return;
     await adminApi.createSponsor({ ...newSponsor, eventId });
     const res = await adminApi.getSponsorScans(eventId);
     setSponsors(res.data);
@@ -64,6 +70,40 @@ export default function AdminDashboardPage() {
     if (!confirm('Eliminar este sponsor?')) return;
     await adminApi.deleteSponsor(id);
     setSponsors(s => s.filter(x => x.id !== id));
+  };
+
+  const handleStartEdit = (sponsor: Sponsor) => {
+    setEditingId(sponsor.id);
+    setEditForm({ name: sponsor.name, boothNumber: sponsor.boothNumber ?? '' });
+    setEditError('');
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setEditForm({ name: '', boothNumber: '' });
+    setEditError('');
+  };
+
+  const handleSaveEdit = async (id: string) => {
+    if (!editForm.name.trim()) {
+      setEditError('O nome não pode estar vazio.');
+      return;
+    }
+    setEditLoading(true);
+    setEditError('');
+    try {
+      await adminApi.updateSponsor(id, {
+        name: editForm.name.trim(),
+        boothNumber: editForm.boothNumber.trim() || undefined,
+      });
+      const res = await adminApi.getSponsorScans(eventId);
+      setSponsors(res.data);
+      setEditingId(null);
+    } catch {
+      setEditError('Erro ao guardar. Tenta novamente.');
+    } finally {
+      setEditLoading(false);
+    }
   };
 
   const handleExport = async () => {
@@ -172,28 +212,24 @@ export default function AdminDashboardPage() {
                   className="border border-brand-gray2 rounded p-5 text-center hover:border-brand-green transition-colors"
                   style={stat.label === 'Qualificados' && stat.value > 0 ? { borderColor: '#00FF41', boxShadow: '0 0 10px #00FF4133' } : {}}>
                   <div className="text-2xl mb-2">{stat.icon}</div>
-                  <div className="font-mono font-bold text-white text-3xl">{stat.value}</div>
-                  <div className="font-mono text-brand-muted text-xs mt-1">{stat.label}</div>
+                  <p className="font-mono font-bold text-white text-2xl">{stat.value}</p>
+                  <p className="font-mono text-brand-muted text-xs mt-1">{stat.label}</p>
                 </div>
               ))}
             </div>
-
-            {dashboard.totalAttendees > 0 && (
+            {dashboard.totalSponsors > 0 && (
               <div className="border border-brand-gray2 rounded p-4">
-                <div className="flex justify-between mb-2">
-                  <span className="font-mono text-brand-muted text-xs">Taxa de qualificação</span>
-                  <span className="font-mono text-brand-green text-xs font-bold">
-                    {Math.round((dashboard.totalQualified / dashboard.totalAttendees) * 100)}%
-                  </span>
-                </div>
-                <div className="w-full bg-brand-gray2 rounded-full h-2">
-                  <div className="h-2 rounded-full transition-all duration-700"
+                <p className="font-mono text-brand-muted text-xs mb-2">Taxa de qualificação</p>
+                <div className="w-full bg-brand-gray rounded-full h-2">
+                  <div className="h-2 rounded-full transition-all"
                     style={{
-                      width: `${Math.round((dashboard.totalQualified / dashboard.totalAttendees) * 100)}%`,
-                      backgroundColor: '#00FF41',
-                      boxShadow: '0 0 6px #00FF41'
+                      width: `${dashboard.totalAttendees > 0 ? Math.round((dashboard.totalQualified / dashboard.totalAttendees) * 100) : 0}%`,
+                      backgroundColor: '#00FF41'
                     }} />
                 </div>
+                <p className="font-mono text-brand-green text-xs mt-2 text-right">
+                  {dashboard.totalAttendees > 0 ? Math.round((dashboard.totalQualified / dashboard.totalAttendees) * 100) : 0}%
+                </p>
               </div>
             )}
           </div>
@@ -202,13 +238,20 @@ export default function AdminDashboardPage() {
         {/* SPONSORS */}
         {tab === 'sponsors' && (
           <div className="flex flex-col gap-4">
-            <div className="border border-brand-gray2 rounded p-4 flex flex-col gap-3">
-              <p className="font-mono text-brand-green text-xs tracking-widest">{'>'} ADICIONAR SPONSOR</p>
-              <input placeholder="Nome do sponsor" value={newSponsor.name}
+            {/* Add sponsor form */}
+            <div className="flex flex-col gap-2 border border-brand-gray2 rounded p-4">
+              <p className="font-mono text-brand-green text-xs tracking-widest mb-1">{'>'} ADICIONAR SPONSOR</p>
+              <input
+                value={newSponsor.name}
                 onChange={e => setNewSponsor({ ...newSponsor, name: e.target.value })}
+                onKeyDown={e => e.key === 'Enter' && handleAddSponsor()}
+                placeholder="Nome do sponsor"
                 className="bg-brand-gray text-white placeholder-brand-muted rounded px-3 py-2 text-sm font-mono outline-none border border-brand-gray2 focus:border-brand-green transition-colors" />
-              <input placeholder="Nº do stand (opcional)" value={newSponsor.boothNumber}
+              <input
+                value={newSponsor.boothNumber}
                 onChange={e => setNewSponsor({ ...newSponsor, boothNumber: e.target.value })}
+                onKeyDown={e => e.key === 'Enter' && handleAddSponsor()}
+                placeholder="Nº do stand (opcional)"
                 className="bg-brand-gray text-white placeholder-brand-muted rounded px-3 py-2 text-sm font-mono outline-none border border-brand-gray2 focus:border-brand-green transition-colors" />
               <button onClick={handleAddSponsor}
                 className="font-mono font-bold py-2 rounded text-black text-xs uppercase tracking-widest active:scale-95 transition-all"
@@ -217,20 +260,69 @@ export default function AdminDashboardPage() {
               </button>
             </div>
 
+            {/* Sponsor list */}
             {sponsors.map(s => (
               <div key={s.id}
-                className="border border-brand-gray2 rounded p-4 flex justify-between items-start hover:border-brand-green transition-colors">
-                <div className="flex-1 min-w-0">
-                  <p className="font-mono font-bold text-white text-sm">{s.name}</p>
-                  <p className="font-mono text-brand-muted text-xs mt-1">
-                    {s.boothNumber ? `Stand ${s.boothNumber}  ·  ` : ''}{s.scanCount} scans
-                  </p>
-                  <p className="font-mono text-brand-gray2 text-xs mt-1 truncate">{s.qrCode}</p>
-                </div>
-                <button onClick={() => handleDeleteSponsor(s.id)}
-                  className="font-mono text-brand-muted hover:text-brand-red text-sm px-2 transition-colors flex-shrink-0">
-                  ✕
-                </button>
+                className="border border-brand-gray2 rounded p-4 hover:border-brand-green transition-colors">
+
+                {editingId === s.id ? (
+                  /* Edit mode */
+                  <div className="flex flex-col gap-2">
+                    <input
+                      value={editForm.name}
+                      onChange={e => { setEditForm({ ...editForm, name: e.target.value }); setEditError(''); }}
+                      placeholder="Nome do sponsor"
+                      className="bg-brand-gray text-white placeholder-brand-muted rounded px-3 py-2 text-sm font-mono outline-none border border-brand-green transition-colors" />
+                    <input
+                      value={editForm.boothNumber}
+                      onChange={e => setEditForm({ ...editForm, boothNumber: e.target.value })}
+                      placeholder="Nº do stand (opcional)"
+                      className="bg-brand-gray text-white placeholder-brand-muted rounded px-3 py-2 text-sm font-mono outline-none border border-brand-gray2 focus:border-brand-green transition-colors" />
+                    {editError && (
+                      <p className="font-mono text-brand-red text-xs">{editError}</p>
+                    )}
+                    <div className="flex gap-2 mt-1">
+                      <button
+                        onClick={() => handleSaveEdit(s.id)}
+                        disabled={editLoading}
+                        className="flex-1 font-mono font-bold py-2 rounded text-black text-xs uppercase tracking-widest disabled:opacity-40 active:scale-95 transition-all"
+                        style={{ backgroundColor: '#00FF41' }}>
+                        {editLoading ? 'A guardar...' : '✓ Guardar'}
+                      </button>
+                      <button
+                        onClick={handleCancelEdit}
+                        disabled={editLoading}
+                        className="font-mono text-brand-muted text-xs border border-brand-gray2 px-4 py-2 rounded hover:border-brand-red hover:text-brand-red transition-colors disabled:opacity-40">
+                        Cancelar
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  /* View mode */
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1 min-w-0">
+                      <p className="font-mono font-bold text-white text-sm">{s.name}</p>
+                      <p className="font-mono text-brand-muted text-xs mt-1">
+                        {s.boothNumber ? `Stand ${s.boothNumber}  ·  ` : ''}{s.scanCount} scans
+                      </p>
+                      <p className="font-mono text-brand-gray2 text-xs mt-1 truncate">{s.qrCode}</p>
+                    </div>
+                    <div className="flex gap-2 flex-shrink-0 ml-2">
+                      <button
+                        onClick={() => handleStartEdit(s)}
+                        className="font-mono text-brand-muted hover:text-brand-green text-sm px-2 transition-colors"
+                        title="Editar">
+                        ✎
+                      </button>
+                      <button
+                        onClick={() => handleDeleteSponsor(s.id)}
+                        className="font-mono text-brand-muted hover:text-brand-red text-sm px-2 transition-colors"
+                        title="Eliminar">
+                        ✕
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
 
