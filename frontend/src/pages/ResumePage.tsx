@@ -7,7 +7,7 @@ export default function ResumePage() {
 
   useEffect(() => {
     if (!token) { navigate('/register'); return; }
-    localStorage.setItem('passport_token', token);
+    sessionStorage.setItem('passport_token', token);
     window.location.href = '/passport';
   }, []);
 

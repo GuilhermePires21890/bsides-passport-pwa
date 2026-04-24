@@ -11,7 +11,7 @@ import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import QRCodesPage from './pages/admin/QRCodesPage';
 
 function App() {
-  const token = localStorage.getItem('passport_token');
+  const token = sessionStorage.getItem('passport_token');
 
   return (
     <Routes>
