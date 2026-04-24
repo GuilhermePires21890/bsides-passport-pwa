@@ -10,8 +10,10 @@ async function bootstrap() {
   app.use(helmet());
 
   // CORS — apenas o frontend autorizado
+  const frontendUrl = process.env.FRONTEND_URL;
+  if (!frontendUrl) throw new Error('FRONTEND_URL env var is required — refusing to start with wildcard CORS.');
   app.enableCors({
-    origin: process.env.FRONTEND_URL || '*',
+    origin: frontendUrl,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
   });

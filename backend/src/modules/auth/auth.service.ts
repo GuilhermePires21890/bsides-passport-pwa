@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, BadRequestException, ForbiddenException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../../prisma/prisma.service';
 import * as bcrypt from 'bcryptjs';
@@ -6,6 +6,13 @@ import sanitizeHtml = require('sanitize-html');
 
 const sanitize = (value: string): string =>
   sanitizeHtml(value, { allowedTags: [], allowedAttributes: {} }).trim();
+
+const TOKEN_TTL_DAYS = 90;
+const tokenExpiry = () => {
+  const d = new Date();
+  d.setDate(d.getDate() + TOKEN_TTL_DAYS);
+  return d;
+};
 
 @Injectable()
 export class AuthService {
@@ -35,11 +42,16 @@ export class AuthService {
     });
 
     if (existing) {
-      return { token: existing.token, attendeeId: existing.id, resumed: true };
+      // Renew token expiry on re-registration
+      const updated = await this.prisma.attendee.update({
+        where: { id: existing.id },
+        data: { tokenExpiresAt: tokenExpiry() },
+      });
+      return { token: updated.token, attendeeId: updated.id, resumed: true };
     }
 
     const attendee = await this.prisma.attendee.create({
-      data: { ...data, name, email, company },
+      data: { ...data, name, email, company, tokenExpiresAt: tokenExpiry() },
     });
     return { token: attendee.token, attendeeId: attendee.id, resumed: false };
   }
@@ -48,6 +60,9 @@ export class AuthService {
     if (!token || token.length > 100) throw new UnauthorizedException('Token inválido.');
     const attendee = await this.prisma.attendee.findUnique({ where: { token } });
     if (!attendee) throw new UnauthorizedException('Token inválido.');
+    if (attendee.tokenExpiresAt && attendee.tokenExpiresAt < new Date()) {
+      throw new ForbiddenException('Token expirado. Regista-te novamente.');
+    }
     return attendee;
   }
 

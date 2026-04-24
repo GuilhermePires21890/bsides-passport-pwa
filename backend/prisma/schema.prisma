@@ -37,7 +37,8 @@ model Attendee {
   email        String
   company      String?
   rgpdConsent  Boolean  @default(false)
-  token        String   @unique @default(uuid())
+  token           String    @unique @default(uuid())
+  tokenExpiresAt  DateTime?
   eventId      String
   event        Event    @relation(fields: [eventId], references: [id])
   stamps       Stamp[]

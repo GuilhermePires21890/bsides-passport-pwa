@@ -1,16 +1,23 @@
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class StampsService {
   constructor(private prisma: PrismaService) {}
 
+  private assertTokenValid(attendee: { tokenExpiresAt: Date | null } | null, label = 'Attendee') {
+    if (!attendee) throw new NotFoundException(`${label} not found`);
+    if (attendee.tokenExpiresAt && attendee.tokenExpiresAt < new Date()) {
+      throw new ForbiddenException('Token expirado. Regista-te novamente.');
+    }
+  }
+
   async scan(attendeeToken: string, qrCode: string) {
     // Find attendee by session token
     const attendee = await this.prisma.attendee.findUnique({
       where: { token: attendeeToken },
     });
-    if (!attendee) throw new NotFoundException('Attendee not found');
+    this.assertTokenValid(attendee);
 
     // Find sponsor by QR code
     const sponsor = await this.prisma.sponsor.findUnique({
@@ -54,21 +61,21 @@ export class StampsService {
         event: { include: { sponsors: true } },
       },
     });
-    if (!attendee) throw new NotFoundException('Attendee not found');
+    this.assertTokenValid(attendee);
 
-    const collectedIds = attendee.stamps.map(s => s.sponsorId);
-    const totalSponsors = attendee.event.sponsors.length;
-    const totalStamps = attendee.stamps.length;
+    const collectedIds = attendee!.stamps.map(s => s.sponsorId);
+    const totalSponsors = attendee!.event.sponsors.length;
+    const totalStamps = attendee!.stamps.length;
 
     return {
       attendee: {
-        id: attendee.id,
-        name: attendee.name,
-        email: attendee.email,
-        company: attendee.company,
+        id: attendee!.id,
+        name: attendee!.name,
+        // email omitted — not needed in the passport view and reduces exposure
+        company: attendee!.company,
       },
-      event: { id: attendee.event.id, name: attendee.event.name },
-      sponsors: attendee.event.sponsors.map(s => ({
+      event: { id: attendee!.event.id, name: attendee!.event.name },
+      sponsors: attendee!.event.sponsors.map(s => ({
         id: s.id,
         name: s.name,
         boothNumber: s.boothNumber,
