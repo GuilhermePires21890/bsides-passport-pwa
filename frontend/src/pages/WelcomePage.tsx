@@ -5,12 +5,12 @@ export default function WelcomePage() {
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
   const [name, setName] = useState('');
-  const token = localStorage.getItem('passport_token');
+  const token = sessionStorage.getItem('passport_token');
   const link = `${window.location.origin}/r/${token}`;
 
   useEffect(() => {
     if (!token) { navigate('/register'); return; }
-    const n = localStorage.getItem('passport_name');
+    const n = sessionStorage.getItem('passport_name');
     if (n) setName(n);
   }, []);
 

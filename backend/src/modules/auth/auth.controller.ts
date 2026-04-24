@@ -1,8 +1,8 @@
-import { Controller, Post, Put, Body, Get, Query, UseGuards, Request } from '@nestjs/common';
+import { Controller, Post, Put, Body, UseGuards, Request } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
-import { IsEmail, IsBoolean, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsEmail, IsBoolean, IsOptional, IsString, IsUUID, MaxLength } from 'class-validator';
 
 class RegisterAttendeeDto {
   @IsString() name: string;
@@ -23,6 +23,10 @@ class CreateStaffDto {
   @IsString() password: string;
 }
 
+class ResumeDto {
+  @IsString() @MaxLength(100) token: string;
+}
+
 class ChangePasswordDto {
   @IsString() currentPassword: string;
   @IsString() newPassword: string;
@@ -39,9 +43,9 @@ export class AuthController {
   }
 
   @Throttle({ default: { ttl: 60000, limit: 10 } })
-  @Get('resume')
-  resume(@Query('token') token: string) {
-    return this.authService.resumeByToken(token);
+  @Post('resume')
+  resume(@Body() dto: ResumeDto) {
+    return this.authService.resumeByToken(dto.token);
   }
 
   @Throttle({ default: { ttl: 60000, limit: 5 } })

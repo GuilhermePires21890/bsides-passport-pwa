@@ -9,7 +9,7 @@ interface Sponsor {
 }
 
 interface PassportData {
-  attendee: { name: string; email: string };
+  attendee: { name: string; company?: string };
   event: { name: string };
   sponsors: Sponsor[];
   progress: { collected: number; total: number };
@@ -23,11 +23,11 @@ export default function PassportPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('passport_token');
+    const token = sessionStorage.getItem('passport_token');
     if (!token) { navigate('/register'); return; }
-    stampsApi.getPassport(token)
+    stampsApi.getPassport()
       .then(res => setData(res.data))
-      .catch(() => { localStorage.removeItem('passport_token'); navigate('/register'); })
+      .catch(() => { sessionStorage.removeItem('passport_token'); navigate('/register'); })
       .finally(() => setLoading(false));
   }, []);
 
@@ -54,7 +54,7 @@ export default function PassportPage() {
       </div>
       <button
         onClick={() => {
-          localStorage.removeItem('passport_token');
+          sessionStorage.removeItem('passport_token');
           navigate('/');
         }}
         className="font-mono text-brand-muted text-xs border border-brand-gray2 px-3 py-1 rounded hover:border-brand-red hover:text-brand-red transition-colors">

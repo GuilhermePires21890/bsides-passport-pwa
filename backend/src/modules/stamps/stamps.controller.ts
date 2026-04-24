@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Query } from '@nestjs/common';
+import { Controller, Post, Get, Body, Headers } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { StampsService } from './stamps.service';
 
@@ -12,9 +12,9 @@ export class StampsController {
     return this.stampsService.scan(body.token, body.qrCode);
   }
 
-  @Throttle({ default: { ttl: 60000, limit: 120 } })
+  @Throttle({ default: { ttl: 60000, limit: 20 } })
   @Get('passport')
-  getPassport(@Query('token') token: string) {
+  getPassport(@Headers('x-attendee-token') token: string) {
     return this.stampsService.getPassport(token);
   }
 }

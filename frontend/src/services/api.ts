@@ -7,11 +7,11 @@ const api = axios.create({
 
 api.interceptors.request.use(config => {
   // Token de attendee
-  const attendeeToken = localStorage.getItem('passport_token');
+  const attendeeToken = sessionStorage.getItem('passport_token');
   if (attendeeToken) config.headers['x-attendee-token'] = attendeeToken;
 
   // JWT de staff — enviado em todas as chamadas autenticadas
-  const staffToken = localStorage.getItem('staff_token');
+  const staffToken = sessionStorage.getItem('staff_token');
   if (staffToken) config.headers['Authorization'] = `Bearer ${staffToken}`;
 
   return config;
@@ -21,7 +21,7 @@ export const authApi = {
   register: (data: { name: string; email: string; company?: string; rgpdConsent: boolean; eventId: string }) =>
     api.post('/auth/register', data),
   resume: (token: string) =>
-    api.get(`/auth/resume?token=${token}`),
+    api.post('/auth/resume', { token }),
   staffLogin: (email: string, password: string) =>
     api.post('/auth/staff/login', { email, password }),
   changePassword: (currentPassword: string, newPassword: string) =>
@@ -35,8 +35,8 @@ export const eventsApi = {
 export const stampsApi = {
   scan: (token: string, qrCode: string) =>
     api.post('/stamps/scan', { token, qrCode }),
-  getPassport: (token: string) =>
-    api.get(`/stamps/passport?token=${token}`),
+  getPassport: () =>
+    api.get('/stamps/passport'),
 };
 
 export const adminApi = {
