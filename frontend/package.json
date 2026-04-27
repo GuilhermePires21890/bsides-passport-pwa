@@ -1,5 +1,5 @@
 {
-  "name": "event-passport-frontend",
+  "name": "passport-bsides-frontend",
   "version": "1.0.0",
   "scripts": {
     "dev": "vite",

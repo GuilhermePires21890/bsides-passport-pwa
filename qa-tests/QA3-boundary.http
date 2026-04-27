@@ -3,7 +3,7 @@
 ### Executado por: Guilherme Pires — Cross-Intel
 
 @baseUrl = https://passport-bsides-porto-production.up.railway.app/api
-@eventId = YOUR_EVENT_ID
+@eventId = 2fca67a3-8b74-465c-b3fb-966cf185e4ec
 
 # ─────────────────────────────────────────
 # B01 — Registo sem nome
@@ -108,7 +108,7 @@ POST {{baseUrl}}/stamps/scan
 Content-Type: application/json
 
 {
-  "token": "YOUR_ATTENDEE_TOKEN",
+  "token": "a75e4bfc-4dcc-4630-a9d7-bc69193061e0",
   "qrCode": "qr-code-que-nao-existe-999"
 }
 
@@ -123,6 +123,6 @@ POST {{baseUrl}}/stamps/scan
 Content-Type: application/json
 
 {
-  "token": "YOUR_ATTENDEE_TOKEN",
-  "qrCode": "YOUR_QR_CODE_UUID"
+  "token": "a75e4bfc-4dcc-4630-a9d7-bc69193061e0",
+  "qrCode": "9d0a3185-3e1d-48a5-97de-57c1e977b7c8"
 }

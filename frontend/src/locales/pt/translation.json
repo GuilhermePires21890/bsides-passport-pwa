@@ -1,7 +1,7 @@
 {
-  "app_name": "Event Passport",
+  "app_name": "Passport BSides Porto",
   "landing": {
-    "title": "Event Passport 2026",
+    "title": "Passport BSides Porto 2026",
     "subtitle": "Visita os estandes dos sponsors, colecciona carimbos e habilita-te a ganhar prémios!",
     "cta": "Começar agora"
   },
@@ -13,7 +13,7 @@
     "email_placeholder": "o.teu@email.com",
     "company": "Empresa (opcional)",
     "company_placeholder": "Onde trabalhas?",
-    "rgpd": "Aceito que os meus dados sejam utilizados pela organização do Your Event para fins do evento.",
+    "rgpd": "Aceito que os meus dados sejam utilizados pela organização do BSides Porto para fins do evento.",
     "rgpd_share": "Aceito partilhar os meus dados com os sponsors do evento.",
     "submit": "Criar Passport",
     "already_registered": "Já tens passport? Recupera aqui."

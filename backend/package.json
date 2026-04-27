@@ -1,5 +1,5 @@
 {
-  "name": "event-passport-backend",
+  "name": "passport-bsides-backend",
   "version": "1.0.0",
   "scripts": {
     "build": "nest build",
