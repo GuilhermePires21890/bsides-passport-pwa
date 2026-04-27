@@ -1,6 +1,6 @@
-# Event Passport 2026
+# Passport BSides Porto 2026
 
-Digital sponsor engagement system for Your Event 2026.
+Digital sponsor engagement system for BSides Porto 2026.
 Attendees scan QR codes at sponsor booths to collect stamps and qualify for prizes.
 
 ## Stack
@@ -13,7 +13,7 @@ Attendees scan QR codes at sponsor booths to collect stamps and qualify for priz
 ## Structure
 
 ```
-event-passport-pwa/
+passport-bsides-porto/
 ├── backend/          # NestJS API
 │   ├── src/
 │   │   ├── modules/  # auth, attendees, sponsors, stamps, events, admin

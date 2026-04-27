@@ -98,7 +98,7 @@ export default function QRCodesPage() {
             <div key={sponsor.id}
               className="border-2 border-brand-green rounded-lg p-8 flex flex-col items-center text-center w-full max-w-sm"
               style={{ boxShadow: '0 0 15px #00FF4133' }}>
-              <p className="font-mono text-brand-green text-xs tracking-widest mb-1">Your Event 2026</p>
+              <p className="font-mono text-brand-green text-xs tracking-widest mb-1">BSides Porto 2026</p>
               <h2 className="font-mono font-bold text-white text-2xl mb-1">{sponsor.name}</h2>
               {sponsor.boothNumber && (
                 <p className="font-mono text-brand-muted text-sm mb-4">Stand {sponsor.boothNumber}</p>
@@ -109,7 +109,7 @@ export default function QRCodesPage() {
                 </div>
               )}
               <p className="font-mono text-brand-muted text-xs leading-relaxed">
-                Scana o QR code com o teu<br />Event Passport 2026
+                Scana o QR code com o teu<br />Passport BSides Porto 2026
               </p>
             </div>
           ))}
@@ -119,7 +119,7 @@ export default function QRCodesPage() {
         {sponsors.map(sponsor => (
           <div key={`print-${sponsor.id}`} className="print-page">
             <p style={{ fontFamily: 'monospace', fontSize: '13px', letterSpacing: '4px', color: '#555', marginBottom: '12px', textTransform: 'uppercase' }}>
-              Your Event 2026
+              BSides Porto 2026
             </p>
             <h2 style={{ fontFamily: 'monospace', fontWeight: 'bold', fontSize: '40px', marginBottom: '8px', color: '#000', textAlign: 'center' }}>
               {sponsor.name}
@@ -135,7 +135,7 @@ export default function QRCodesPage() {
               </div>
             )}
             <p style={{ fontFamily: 'monospace', fontSize: '15px', color: '#555', textAlign: 'center', lineHeight: '1.8' }}>
-              Scana o QR code com o teu<br />Event Passport 2026
+              Scana o QR code com o teu<br />Passport BSides Porto 2026
             </p>
             <p style={{ fontFamily: 'monospace', fontSize: '9px', color: '#bbb', marginTop: '20px', textAlign: 'center' }}>
               {sponsor.qrCode}
