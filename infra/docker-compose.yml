@@ -1,11 +1,11 @@
 services:
   postgres:
     image: postgres:15-alpine
-    container_name: passport-bsides-db
+    container_name: event-passport-db
     environment:
       POSTGRES_USER: passport
       POSTGRES_PASSWORD: passport123
-      POSTGRES_DB: passport_bsides
+      POSTGRES_DB: event_passport
     ports:
       - '5432:5432'
     volumes:

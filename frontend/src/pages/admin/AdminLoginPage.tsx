@@ -30,12 +30,12 @@ export default function AdminLoginPage() {
       <div className="relative z-10 w-full max-w-sm">
         <p className="font-mono text-brand-green text-xs tracking-widest mb-2">[ STAFF ACCESS ]</p>
         <h1 className="font-mono font-bold text-white text-2xl mb-1">Admin Panel</h1>
-        <p className="font-mono text-brand-muted text-sm mb-8">BSides Porto 2026</p>
+        <p className="font-mono text-brand-muted text-sm mb-8">Your Event 2026</p>
 
         <div className="flex flex-col gap-4">
           <div>
             <label className="font-mono text-brand-green text-xs mb-1 block">{'>'} Email</label>
-            <input type="email" placeholder="staff@bsidesporto.pt" value={form.email}
+            <input type="email" placeholder="staff@yourevent.example.com" value={form.email}
               onChange={e => setForm({ ...form, email: e.target.value })}
               className="w-full bg-black text-white placeholder-brand-muted rounded px-4 py-3 text-sm font-mono outline-none border border-brand-gray2 focus:border-brand-green transition-colors" />
           </div>

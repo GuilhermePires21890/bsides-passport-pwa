@@ -80,7 +80,7 @@ export default function LandingPage() {
 
       {/* Footer */}
       <p className="absolute bottom-4 font-mono text-brand-muted text-xs">
-        BSides Porto 2026 · Powered by Cross-Intel
+        Your Event 2026 · Powered by Cross-Intel
       </p>
     </div>
   );
