@@ -15,7 +15,7 @@ export default function QRCodesPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('staff_token');
+    const token = sessionStorage.getItem('staff_token');
     if (!token) { navigate('/admin'); return; }
 
     eventsApi.getActive().then(res => {

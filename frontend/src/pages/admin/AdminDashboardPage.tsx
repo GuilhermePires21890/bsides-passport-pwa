@@ -32,7 +32,7 @@ export default function AdminDashboardPage() {
   const [pwSuccess, setPwSuccess] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('staff_token');
+    const token = sessionStorage.getItem('staff_token');
     if (!token) { navigate('/admin'); return; }
     eventsApi.getActive().then(res => {
       const id = res.data.id;
@@ -114,7 +114,7 @@ export default function AdminDashboardPage() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('staff_token');
+    sessionStorage.removeItem('staff_token');
     navigate('/admin');
   };
 

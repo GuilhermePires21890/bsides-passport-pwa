@@ -13,7 +13,7 @@ export default function AdminLoginPage() {
     setError('');
     try {
       const res = await authApi.staffLogin(form.email, form.password);
-      localStorage.setItem('staff_token', res.data.access_token);
+      sessionStorage.setItem('staff_token', res.data.access_token);
       navigate('/admin/dashboard');
     } catch {
       setError('Credenciais inválidas.');

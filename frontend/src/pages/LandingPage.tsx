@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 export default function LandingPage() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const token = localStorage.getItem('passport_token');
+  const token = sessionStorage.getItem('passport_token');
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 bg-brand-black relative overflow-hidden">

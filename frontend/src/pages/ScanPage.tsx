@@ -16,7 +16,7 @@ export default function ScanPage() {
   const [progress, setProgress] = useState<{ collected: number; total: number } | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('passport_token');
+    const token = sessionStorage.getItem('passport_token');
     if (!token) { navigate('/register'); return; }
     if (startedRef.current) return;
 
@@ -36,7 +36,7 @@ export default function ScanPage() {
       { fps: 10, qrbox: { width: 250, height: 250 } },
       async (qrCode) => {
         try { await scanner.stop(); } catch {}
-        const token = localStorage.getItem('passport_token');
+        const token = sessionStorage.getItem('passport_token');
         if (!token) return;
         try {
           const res = await stampsApi.scan(token, qrCode);
@@ -61,7 +61,7 @@ export default function ScanPage() {
   }, []);
 
   const handleManualScan = async (qrCode: string) => {
-    const token = localStorage.getItem('passport_token');
+    const token = sessionStorage.getItem('passport_token');
     if (!token || !qrCode) return;
     try {
       const res = await stampsApi.scan(token, qrCode);

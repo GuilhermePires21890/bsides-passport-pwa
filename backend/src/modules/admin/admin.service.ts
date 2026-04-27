@@ -1,11 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class AdminService {
   constructor(private prisma: PrismaService) {}
 
+  private async assertEventExists(eventId: string) {
+    const event = await this.prisma.event.findUnique({ where: { id: eventId }, select: { id: true } });
+    if (!event) throw new NotFoundException('Evento não encontrado.');
+  }
+
   async getDashboard(eventId: string) {
+    await this.assertEventExists(eventId);
     const totalSponsors = await this.prisma.sponsor.count({ where: { eventId } });
     const totalAttendees = await this.prisma.attendee.count({ where: { eventId } });
     const totalStamps = await this.prisma.stamp.count({
@@ -27,6 +33,7 @@ export class AdminService {
   }
 
   async getQualifiedList(eventId: string) {
+    await this.assertEventExists(eventId);
     const totalSponsors = await this.prisma.sponsor.count({ where: { eventId } });
 
     const attendees = await this.prisma.attendee.findMany({
@@ -59,6 +66,7 @@ export class AdminService {
   }
 
   async getSponsorScans(eventId: string) {
+    await this.assertEventExists(eventId);
     const sponsors = await this.prisma.sponsor.findMany({
       where: { eventId },
       include: { _count: { select: { stamps: true } } },

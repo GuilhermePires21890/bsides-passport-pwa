@@ -5,9 +5,12 @@ import { AuthService } from './auth.service';
 
 @Module({
   imports: [
-    JwtModule.register({
-      secret: process.env.JWT_SECRET || 'bsides-porto-secret',
-      signOptions: { expiresIn: '24h' },
+    JwtModule.registerAsync({
+      useFactory: () => {
+        const secret = process.env.JWT_SECRET;
+        if (!secret) throw new Error('JWT_SECRET env var is required — set it before starting the server.');
+        return { secret, signOptions: { expiresIn: '24h' } };
+      },
     }),
   ],
   controllers: [AuthController],

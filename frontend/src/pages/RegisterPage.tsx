@@ -90,8 +90,8 @@ export default function RegisterPage() {
         company: form.company || undefined,
         rgpdConsent: form.rgpdConsent, eventId,
       });
-      localStorage.setItem('passport_token', res.data.token);
-      localStorage.setItem('passport_name', form.name);
+      sessionStorage.setItem('passport_token', res.data.token);
+      sessionStorage.setItem('passport_name', form.name);
       window.location.href = '/welcome';
     } catch {
       setError(t('common.error'));
