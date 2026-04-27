@@ -161,7 +161,7 @@ Key fields to update:
 {
   "app_name": "Your Event Passport",
   "landing": {
-    "title": "Your Event 2025",
+    "title": "Your Event 2026",
     "rgpd": "I agree that my data may be used by Your Event..."
   }
 }
@@ -255,6 +255,6 @@ MIT — free to use, modify, and distribute.
 
 ## 🙏 Based on BSides Porto 2026
 
-This template was extracted from the production system built for [BSides Porto 2026](https://bsidesporto.pt) — a community security conference in Porto, Portugal.
+This template was extracted from the production system built for [BSides Porto 2026](https://bsidesporto.org/) — a community security conference in Porto, Portugal.
 
 Built by [Guilherme Pires](https://github.com/GuilhermePires21890) — Solution Architect at [Cross Intel](https://cross-intel.com)
