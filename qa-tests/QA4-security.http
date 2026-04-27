@@ -1,13 +1,21 @@
 ### QA4 — SECURITY TEST
-### Passport BSides Porto — 14 Abril 2026
-### Executado por: Guilherme Pires — Cross-Intel
-
-@baseUrl = https://passport-bsides-porto-production.up.railway.app/api
-@eventId = 2fca67a3-8b74-465c-b3fb-966cf185e4ec
+### Event Passport PWA — Template
+### Tests XSS, SQL injection, auth bypass, and rate limiting.
+### Run QA1 first to confirm the API is reachable.
 
 # ─────────────────────────────────────────
-# SEC01 — XSS no nome
-# Esperado: 400 ou nome sanitizado (sem script)
+# CONFIGURATION
+# ─────────────────────────────────────────
+@baseUrl = http://localhost:3000/api
+@eventId = <your-event-id>
+
+# Production example:
+# @baseUrl = https://your-app.up.railway.app/api
+
+
+# ─────────────────────────────────────────
+# SEC01 — XSS in name field
+# Expected: 400 or sanitized name (no script tag)
 # ─────────────────────────────────────────
 ### SEC01
 POST {{baseUrl}}/auth/register
@@ -15,7 +23,7 @@ Content-Type: application/json
 
 {
   "name": "<script>alert('xss')</script>",
-  "email": "sec01@bsidestest.com",
+  "email": "sec01@example.com",
   "rgpdConsent": true,
   "eventId": "{{eventId}}"
 }
@@ -23,8 +31,8 @@ Content-Type: application/json
 ###
 
 # ─────────────────────────────────────────
-# SEC02 — XSS na empresa
-# Esperado: 400 ou empresa sanitizada
+# SEC02 — XSS in company field
+# Expected: 400 or sanitized company value
 # ─────────────────────────────────────────
 ### SEC02
 POST {{baseUrl}}/auth/register
@@ -32,7 +40,7 @@ Content-Type: application/json
 
 {
   "name": "Security Test",
-  "email": "sec02@bsidestest.com",
+  "email": "sec02@example.com",
   "company": "<img src=x onerror=alert(1)>",
   "rgpdConsent": true,
   "eventId": "{{eventId}}"
@@ -40,12 +48,9 @@ Content-Type: application/json
 
 ###
 
-### SEC02-check
-GET {{baseUrl}}/auth/resume?token=3078ec50-76a5-4802-968d-2a189293fd12
-
 # ─────────────────────────────────────────
-# SEC03 — SQL Injection no email
-# Esperado: 400
+# SEC03 — SQL injection in email
+# Expected: 400
 # ─────────────────────────────────────────
 ### SEC03
 POST {{baseUrl}}/auth/register
@@ -61,20 +66,17 @@ Content-Type: application/json
 ###
 
 # ─────────────────────────────────────────
-# SEC04 — Acesso admin sem JWT
-# Esperado: 401
+# SEC04 — Access admin without JWT
+# Expected: 401
 # ─────────────────────────────────────────
 ### SEC04
 GET {{baseUrl}}/admin/dashboard?eventId={{eventId}}
 
 ###
 
-### SEC04
-GET {{baseUrl}}/admin/dashboard?eventId={{eventId}}
-
 # ─────────────────────────────────────────
-# SEC05 — JWT manipulado manualmente
-# Esperado: 401
+# SEC05 — Tampered JWT token
+# Expected: 401
 # ─────────────────────────────────────────
 ### SEC05
 GET {{baseUrl}}/admin/dashboard?eventId={{eventId}}
@@ -83,9 +85,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmYWtlLWlkL
 ###
 
 # ─────────────────────────────────────────
-# SEC06 — Rate limit no registo (6 requests seguidos)
-# Esperado: 429 no 6º pedido
-# Corre este bloco 6 vezes seguidas rapidamente
+# SEC06 — Rate limit on registration (run 6x rapidly)
+# Expected: 429 on the 6th request
+# TIP: use REST Client "Send All Requests" or run in rapid succession
 # ─────────────────────────────────────────
 ### SEC06
 POST {{baseUrl}}/auth/register
@@ -93,7 +95,7 @@ Content-Type: application/json
 
 {
   "name": "Rate Test",
-  "email": "sec06.ratelimit.secund@bsidestest.com",
+  "email": "sec06.ratelimit@example.com",
   "rgpdConsent": true,
   "eventId": "{{eventId}}"
 }
@@ -101,9 +103,8 @@ Content-Type: application/json
 ###
 
 # ─────────────────────────────────────────
-# SEC07 — Rate limit no login (6 requests seguidos)
-# Esperado: 429 no 6º pedido
-# Corre este bloco 6 vezes seguidas rapidamente
+# SEC07 — Rate limit on staff login (run 6x rapidly)
+# Expected: 429 on the 6th request
 # ─────────────────────────────────────────
 ### SEC07
 POST {{baseUrl}}/auth/staff/login
@@ -117,8 +118,8 @@ Content-Type: application/json
 ###
 
 # ─────────────────────────────────────────
-# SEC08 — Criar staff sem JWT
-# Esperado: 401
+# SEC08 — Create staff without JWT
+# Expected: 401
 # ─────────────────────────────────────────
 ### SEC08
 POST {{baseUrl}}/auth/staff/create

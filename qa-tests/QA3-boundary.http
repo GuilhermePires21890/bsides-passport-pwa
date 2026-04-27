@@ -1,13 +1,27 @@
 ### QA3 — BOUNDARY TEST
-### Passport BSides Porto — 14 Abril 2026
-### Executado por: Guilherme Pires — Cross-Intel
-
-@baseUrl = https://passport-bsides-porto-production.up.railway.app/api
-@eventId = 2fca67a3-8b74-465c-b3fb-966cf185e4ec
+### Event Passport PWA — Template
+### Tests input validation and edge cases.
+### Run QA1 first to confirm the API is reachable.
 
 # ─────────────────────────────────────────
-# B01 — Registo sem nome
-# Esperado: 400
+# CONFIGURATION
+# ─────────────────────────────────────────
+@baseUrl = http://localhost:3000/api
+@eventId = <your-event-id>
+
+# A valid attendee token (from QA2/F01) — needed for B07 and B08
+@attendeeToken = <paste-token-here>
+
+# A valid sponsor QR code (from admin panel) — needed for B08
+@qrCodeSponsor = <sponsor-qr-code-uuid>
+
+# Production example:
+# @baseUrl = https://your-app.up.railway.app/api
+
+
+# ─────────────────────────────────────────
+# B01 — Register without name
+# Expected: 400
 # ─────────────────────────────────────────
 ### B01
 POST {{baseUrl}}/auth/register
@@ -15,7 +29,7 @@ Content-Type: application/json
 
 {
   "name": "",
-  "email": "b01@bsidestest.com",
+  "email": "b01@example.com",
   "rgpdConsent": true,
   "eventId": "{{eventId}}"
 }
@@ -23,8 +37,8 @@ Content-Type: application/json
 ###
 
 # ─────────────────────────────────────────
-# B02 — Registo com nome de 101 caracteres
-# Esperado: 400
+# B02 — Register with name > 100 characters
+# Expected: 400
 # ─────────────────────────────────────────
 ### B02
 POST {{baseUrl}}/auth/register
@@ -32,7 +46,7 @@ Content-Type: application/json
 
 {
   "name": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-  "email": "b02@bsidestest.com",
+  "email": "b02@example.com",
   "rgpdConsent": true,
   "eventId": "{{eventId}}"
 }
@@ -40,8 +54,8 @@ Content-Type: application/json
 ###
 
 # ─────────────────────────────────────────
-# B03 — Registo com email inválido
-# Esperado: 400
+# B03 — Register with invalid email
+# Expected: 400
 # ─────────────────────────────────────────
 ### B03
 POST {{baseUrl}}/auth/register
@@ -49,7 +63,7 @@ Content-Type: application/json
 
 {
   "name": "Boundary Test",
-  "email": "nãoéumemail",
+  "email": "notanemail",
   "rgpdConsent": true,
   "eventId": "{{eventId}}"
 }
@@ -57,8 +71,8 @@ Content-Type: application/json
 ###
 
 # ─────────────────────────────────────────
-# B04 — Registo sem eventId
-# Esperado: 400
+# B04 — Register without eventId
+# Expected: 400
 # ─────────────────────────────────────────
 ### B04
 POST {{baseUrl}}/auth/register
@@ -66,7 +80,7 @@ Content-Type: application/json
 
 {
   "name": "Boundary Test",
-  "email": "b04@bsidestest.com",
+  "email": "b04@example.com",
   "rgpdConsent": true,
   "eventId": ""
 }
@@ -74,8 +88,8 @@ Content-Type: application/json
 ###
 
 # ─────────────────────────────────────────
-# B05 — Registo sem RGPD
-# Esperado: 400
+# B05 — Register without RGPD consent
+# Expected: 400
 # ─────────────────────────────────────────
 ### B05
 POST {{baseUrl}}/auth/register
@@ -83,7 +97,7 @@ Content-Type: application/json
 
 {
   "name": "Boundary Test",
-  "email": "b05.novo@bsidestest.com",
+  "email": "b05@example.com",
   "rgpdConsent": false,
   "eventId": "{{eventId}}"
 }
@@ -91,38 +105,39 @@ Content-Type: application/json
 ###
 
 # ─────────────────────────────────────────
-# B06 — Token inexistente no resume
-# Esperado: 401
+# B06 — Resume with non-existent token
+# Expected: 401
 # ─────────────────────────────────────────
 ### B06
-GET {{baseUrl}}/auth/resume?token=token-que-nao-existe-123456
+GET {{baseUrl}}/auth/resume?token=token-that-does-not-exist-123456
 
 ###
 
 # ─────────────────────────────────────────
-# B07 — Scan com QR inválido
-# Esperado: 404
+# B07 — Scan with invalid QR code
+# Expected: 404
 # ─────────────────────────────────────────
 ### B07
 POST {{baseUrl}}/stamps/scan
 Content-Type: application/json
 
 {
-  "token": "a75e4bfc-4dcc-4630-a9d7-bc69193061e0",
-  "qrCode": "qr-code-que-nao-existe-999"
+  "token": "{{attendeeToken}}",
+  "qrCode": "qr-code-that-does-not-exist-999"
 }
 
 ###
 
 # ─────────────────────────────────────────
-# B08 — Scan duplicado (mesmo token + mesmo QR)
-# Esperado: 409
+# B08 — Duplicate scan (same token + same QR)
+# Expected: 409
+# NOTE: run F04 from QA2 first, then run this with the same token + QR
 # ─────────────────────────────────────────
 ### B08
 POST {{baseUrl}}/stamps/scan
 Content-Type: application/json
 
 {
-  "token": "a75e4bfc-4dcc-4630-a9d7-bc69193061e0",
-  "qrCode": "9d0a3185-3e1d-48a5-97de-57c1e977b7c8"
+  "token": "{{attendeeToken}}",
+  "qrCode": "{{qrCodeSponsor}}"
 }

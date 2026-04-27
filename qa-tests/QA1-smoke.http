@@ -1,13 +1,22 @@
 ### QA1 — SMOKE TEST
-### Passport BSides Porto — 14 Abril 2026
-### Executado por: Guilherme Pires — Cross-Intel
-
-@baseUrl = https://passport-bsides-porto-production.up.railway.app/api
-@eventId = 2fca67a3-8b74-465c-b3fb-966cf185e4ec
+### Event Passport PWA — Template
+### Run this first to confirm the API is reachable before running other suites.
+### Docs: https://github.com/your-org/event-passport-pwa
 
 # ─────────────────────────────────────────
-# S01 — API está online
-# Esperado: 200 + evento activo
+# CONFIGURATION
+# Update these variables before running.
+# ─────────────────────────────────────────
+@baseUrl = http://localhost:3000/api
+@eventId = <your-event-id>
+
+# Production example:
+# @baseUrl = https://your-app.up.railway.app/api
+
+
+# ─────────────────────────────────────────
+# S01 — API is online
+# Expected: 200 + active event object
 # ─────────────────────────────────────────
 ### S01
 GET {{baseUrl}}/events/active
@@ -15,8 +24,8 @@ GET {{baseUrl}}/events/active
 ###
 
 # ─────────────────────────────────────────
-# S02 — Sponsors carregam
-# Esperado: 200 + lista de sponsors
+# S02 — Sponsors load
+# Expected: 200 + sponsor list
 # ─────────────────────────────────────────
 ### S02
 GET {{baseUrl}}/sponsors?eventId={{eventId}}
@@ -24,8 +33,8 @@ GET {{baseUrl}}/sponsors?eventId={{eventId}}
 ###
 
 # ─────────────────────────────────────────
-# S03 — Admin login responde
-# Esperado: 401 (credenciais erradas intencionais — confirmar que endpoint responde)
+# S03 — Admin login endpoint responds
+# Expected: 401 (wrong credentials intentional — confirms endpoint is alive)
 # ─────────────────────────────────────────
 ### S03
 POST {{baseUrl}}/auth/staff/login
