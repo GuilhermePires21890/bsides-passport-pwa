@@ -171,7 +171,7 @@ export default function AdminDashboardPage() {
       <div className="px-6 pt-10 pb-4 border-b border-brand-gray2 flex justify-between items-start">
         <div>
           <p className="font-mono text-brand-green text-xs tracking-widest mb-1">[ STAFF PANEL ]</p>
-          <h1 className="font-mono font-bold text-white text-xl">Admin — BSides Porto 2026</h1>
+          <h1 className="font-mono font-bold text-white text-xl">Admin — Your Event 2026</h1>
         </div>
         <button onClick={() => navigate('/admin/qrcodes')}
           className="font-mono text-brand-muted text-xs border border-brand-gray2 px-3 py-1 rounded hover:border-brand-green hover:text-brand-green transition-colors">

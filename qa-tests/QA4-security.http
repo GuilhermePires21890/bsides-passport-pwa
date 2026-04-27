@@ -3,7 +3,7 @@
 ### Executado por: Guilherme Pires — Cross-Intel
 
 @baseUrl = https://passport-bsides-porto-production.up.railway.app/api
-@eventId = 2fca67a3-8b74-465c-b3fb-966cf185e4ec
+@eventId = YOUR_EVENT_ID
 
 # ─────────────────────────────────────────
 # SEC01 — XSS no nome
@@ -41,7 +41,7 @@ Content-Type: application/json
 ###
 
 ### SEC02-check
-GET {{baseUrl}}/auth/resume?token=3078ec50-76a5-4802-968d-2a189293fd12
+GET {{baseUrl}}/auth/resume?token=YOUR_ATTENDEE_TOKEN
 
 # ─────────────────────────────────────────
 # SEC03 — SQL Injection no email

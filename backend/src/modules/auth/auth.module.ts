@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 @Module({
   imports: [
     JwtModule.register({
-      secret: process.env.JWT_SECRET || 'bsides-porto-secret',
+      secret: process.env.JWT_SECRET || 'change-me-in-production',
       signOptions: { expiresIn: '24h' },
     }),
   ],

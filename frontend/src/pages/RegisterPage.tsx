@@ -112,7 +112,7 @@ export default function RegisterPage() {
 
         <p className="font-mono text-brand-green text-xs tracking-widest mb-1">[ REGISTO ]</p>
         <h1 className="font-mono font-bold text-white text-2xl mb-1">{t('register.title')}</h1>
-        <p className="font-mono text-brand-muted text-sm mb-8">BSides Porto 2026</p>
+        <p className="font-mono text-brand-muted text-sm mb-8">Your Event 2026</p>
 
         <div className="flex flex-col gap-4">
           <div>

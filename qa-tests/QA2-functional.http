@@ -3,10 +3,10 @@
 ### Executado por: Guilherme Pires — Cross-Intel
 
 @baseUrl = https://passport-bsides-porto-production.up.railway.app/api
-@eventId = 2fca67a3-8b74-465c-b3fb-966cf185e4ec
-@qrCodeCrossIntel = 9d0a3185-3e1d-48a5-97de-57c1e977b7c8
-@staffEmail = guilherme.pires@bsidesporto.pt
-@staffPassword = Bsides&Porto@2026!
+@eventId = YOUR_EVENT_ID
+@qrCodeCrossIntel = YOUR_QR_CODE_UUID
+@staffEmail = YOUR_STAFF_EMAIL
+@staffPassword = YOUR_STAFF_PASSWORD
 
 # ─────────────────────────────────────────
 # F01 — Registo com dados válidos
@@ -29,34 +29,34 @@ Content-Type: application/json
 # ─────────────────────────────────────────
 # F02 — Recuperação de sessão com token válido
 # Esperado: 200 + dados do attendee
-# NOTA: substitui TOKEN pelo token retornado no F01
+# NOTA: substitui YOUR_ATTENDEE_TOKEN pelo token retornado no F01
 # ─────────────────────────────────────────
 ### F02
-GET {{baseUrl}}/auth/resume?token=a75e4bfc-4dcc-4630-a9d7-bc69193061e0
+GET {{baseUrl}}/auth/resume?token=YOUR_ATTENDEE_TOKEN
 
 ###
 
 # ─────────────────────────────────────────
 # F03 — Consultar passport após registo
 # Esperado: 200 + 0 stamps
-# NOTA: substitui TOKEN pelo token retornado no F01
+# NOTA: substitui YOUR_ATTENDEE_TOKEN pelo token retornado no F01
 # ─────────────────────────────────────────
 ### F03
-GET {{baseUrl}}/stamps/passport?token=a75e4bfc-4dcc-4630-a9d7-bc69193061e0
+GET {{baseUrl}}/stamps/passport?token=YOUR_ATTENDEE_TOKEN
 
 ###
 
 # ─────────────────────────────────────────
 # F04 — Scan QR code válido
 # Esperado: 201 + stamp registado
-# NOTA: substitui TOKEN pelo token retornado no F01
+# NOTA: substitui YOUR_ATTENDEE_TOKEN pelo token retornado no F01
 # ─────────────────────────────────────────
 ### F04
 POST {{baseUrl}}/stamps/scan
 Content-Type: application/json
 
 {
-  "token": "a75e4bfc-4dcc-4630-a9d7-bc69193061e0",
+  "token": "YOUR_ATTENDEE_TOKEN",
   "qrCode": "{{qrCodeCrossIntel}}"
 }
 
@@ -65,10 +65,10 @@ Content-Type: application/json
 # ─────────────────────────────────────────
 # F05 — Consultar passport após scan
 # Esperado: 200 + 1 stamp
-# NOTA: substitui TOKEN pelo token retornado no F01
+# NOTA: substitui YOUR_ATTENDEE_TOKEN pelo token retornado no F01
 # ─────────────────────────────────────────
 ### F05
-GET {{baseUrl}}/stamps/passport?token=a75e4bfc-4dcc-4630-a9d7-bc69193061e0
+GET {{baseUrl}}/stamps/passport?token=YOUR_ATTENDEE_TOKEN
 
 ###
 
@@ -90,8 +90,8 @@ Content-Type: application/json
 # ─────────────────────────────────────────
 # F07 — Dashboard admin após registo
 # Esperado: 200 + stats actualizadas
-# NOTA: substitui TOKEN pelo access_token retornado no F06
+# NOTA: substitui YOUR_STAFF_JWT_TOKEN pelo access_token retornado no F06
 # ─────────────────────────────────────────
 ### F07
 GET {{baseUrl}}/admin/dashboard?eventId={{eventId}}
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkMjM2M2U0MC05ZTQ1LTRiZmEtOWIwMC03OTk3N2IxMzM2MDkiLCJlbWFpbCI6Imd1aWxoZXJtZS5waXJlc0Bic2lkZXNwb3J0by5wdCIsInJvbGUiOiJzdGFmZiIsImlhdCI6MTc3NjE4MDUwNSwiZXhwIjoxNzc2MjY2OTA1fQ.jLLHSzBaXvhOxzxoGGh2kRaE2hS4aFGZ9Ku5huUuB10
+Authorization: Bearer YOUR_STAFF_JWT_TOKEN

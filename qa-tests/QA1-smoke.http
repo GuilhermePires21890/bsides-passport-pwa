@@ -3,7 +3,7 @@
 ### Executado por: Guilherme Pires — Cross-Intel
 
 @baseUrl = https://passport-bsides-porto-production.up.railway.app/api
-@eventId = 2fca67a3-8b74-465c-b3fb-966cf185e4ec
+@eventId = YOUR_EVENT_ID
 
 # ─────────────────────────────────────────
 # S01 — API está online
