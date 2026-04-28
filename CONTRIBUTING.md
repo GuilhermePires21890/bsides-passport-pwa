@@ -207,4 +207,4 @@ All contributors are credited in the project. Thank you for helping make this be
 
 ---
 
-*Built with ❤️ for the security community — originally for [BSides Porto 2026](https://bsidesporto.pt)*
+*Built with ❤️ for the security community — originally for [BSides Your City 2026](https://yourevent.example.com)*

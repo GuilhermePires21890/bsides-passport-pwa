@@ -124,12 +124,12 @@ All event-specific config is controlled via environment variables in `backend/.e
 
 | Variable | Description | Example |
 |---|---|---|
-| `EVENT_NAME` | Event display name | `"BSides Porto"` |
+| `EVENT_NAME` | Event display name | `"BSides Your City"` |
 | `EVENT_EDITION` | Edition year | `"2026"` |
-| `EVENT_CITY` | City name | `"Porto"` |
+| `EVENT_CITY` | City name | `"Your City"` |
 | `EVENT_DATE` | Event dates | `"Jun 26-27, 2026"` |
 | `EVENT_VENUE` | Venue name | `"ISEP"` |
-| `EVENT_URL` | Event website | `"https://bsidesporto.pt"` |
+| `EVENT_URL` | Event website | `"https://yourevent.example.com"` |
 | `STAMPS_REQUIRED` | Stamps needed for prize | `5` |
 | `MAX_STAMPS` | Max stamps per attendee | `10` |
 | `JWT_SECRET` | Auth secret (keep secret!) | `openssl rand -hex 64` |
@@ -251,10 +251,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 MIT — free to use, modify, and distribute.
 
----
 
-## 🙏 Based on BSides Porto 2026
 
-This template was extracted from the production system built for [BSides Porto 2026](https://bsidesporto.org/) — a community security conference in Porto, Portugal.
-
-Built by [Guilherme Pires](https://github.com/GuilhermePires21890) — Solution Architect at [Cross Intel](https://cross-intel.com)
+Built by [Guilherme Pires](https://github.com/GuilhermePires21890)

@@ -1,7 +1,7 @@
 {
-  "app_name": "Passport BSides Porto",
+  "app_name": "Passport BSides",
   "landing": {
-    "title": "Passport BSides Porto 2026",
+    "title": "Passport BSides 2026",
     "subtitle": "Visit sponsor booths, collect stamps and qualify for prizes!",
     "cta": "Get started"
   },
@@ -13,7 +13,7 @@
     "email_placeholder": "your@email.com",
     "company": "Company (optional)",
     "company_placeholder": "Where do you work?",
-    "rgpd": "I agree that my data may be used by BSides Porto for event purposes.",
+    "rgpd": "I agree that my data may be used by BSides Your City for event purposes.",
     "rgpd_share": "I agree to share my data with event sponsors.",
     "submit": "Create Passport",
     "already_registered": "Already have a passport? Resume here."

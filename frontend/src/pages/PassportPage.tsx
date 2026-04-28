@@ -49,7 +49,7 @@ export default function PassportPage() {
     <div className="px-6 pt-10 pb-5 border-b border-brand-gray2 flex justify-between items-start">
       <div>
         <p className="font-mono text-brand-green text-xs tracking-widest mb-1">[ PASSPORT ]</p>
-        <h1 className="font-mono font-bold text-white text-2xl">BSides Porto 2026</h1>
+        <h1 className="font-mono font-bold text-white text-2xl">BSides Your City 2026</h1>
         <p className="font-mono text-brand-green text-sm mt-1">{attendee.name}</p>
       </div>
       <button

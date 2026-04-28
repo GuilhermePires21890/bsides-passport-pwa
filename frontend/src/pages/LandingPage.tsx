@@ -36,7 +36,7 @@ export default function LandingPage() {
             B<span className="text-brand-green">S</span>ides
           </h1>
           <h2 className="font-mono font-bold leading-none" style={{ fontSize: '3rem', color: '#FF4500' }}>
-            PORTO
+            Your City
           </h2>
           <p className="font-mono text-brand-yellow text-lg font-bold mt-1">2026</p>
         </div>
@@ -69,7 +69,7 @@ export default function LandingPage() {
           </div>
           <div className="border border-brand-gray2 rounded p-3 text-left">
             <p className="font-mono text-brand-green text-xs mb-1">WHERE</p>
-            <p className="font-mono text-white text-xs">ISEP, Porto</p>
+            <p className="font-mono text-white text-xs">Your Venue</p>
           </div>
         </div>
         {/* Recover session */}
@@ -80,7 +80,7 @@ export default function LandingPage() {
 
       {/* Footer */}
       <p className="absolute bottom-4 font-mono text-brand-muted text-xs">
-        BSides Porto 2026 · Powered by Cross-Intel
+        BSides Your City 2026 · Powered by Cross-Intel
       </p>
     </div>
   );

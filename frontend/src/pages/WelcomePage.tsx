@@ -45,7 +45,7 @@ export default function WelcomePage() {
           <h1 className="font-mono font-bold text-white text-2xl mb-1">
             Bem-vindo{name ? `, ${name.split(' ')[0]}` : ''}!
           </h1>
-          <p className="font-mono text-brand-muted text-sm">BSides Porto 2026</p>
+          <p className="font-mono text-brand-muted text-sm">BSides Your City 2026</p>
         </div>
 
         {/* Link pessoal */}
