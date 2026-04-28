@@ -129,7 +129,7 @@ All event-specific config is controlled via environment variables in `backend/.e
 | `EVENT_CITY` | City name | `"Your City"` |
 | `EVENT_DATE` | Event dates | `"Jun 26-27, 2026"` |
 | `EVENT_VENUE` | Venue name | `"ISEP"` |
-| `EVENT_URL` | Event website | `"https://yourevent.example.com"` |
+| `EVENT_URL` | Event website | `"https://yourevent.example.pt"` |
 | `STAMPS_REQUIRED` | Stamps needed for prize | `5` |
 | `MAX_STAMPS` | Max stamps per attendee | `10` |
 | `JWT_SECRET` | Auth secret (keep secret!) | `openssl rand -hex 64` |
@@ -253,4 +253,4 @@ MIT — free to use, modify, and distribute.
 
 
 
-Built by [Guilherme Pires](https://github.com/GuilhermePires21890)
+Built by [Guilherme Pires](https://github.com/GuilhermePires21890) — Solution Architect at [Cross Intel](https://cross-intel.com)
