@@ -80,7 +80,7 @@ export default function LandingPage() {
 
       {/* Footer */}
       <p className="absolute bottom-4 font-mono text-brand-muted text-xs">
-        BSides Your City 2026 · Powered by Cross-Intel
+        BSides Your City 2026 · Powered by Guilherme Pires
       </p>
     </div>
   );
