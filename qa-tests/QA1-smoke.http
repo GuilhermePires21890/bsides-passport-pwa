@@ -44,3 +44,13 @@ Content-Type: application/json
   "email": "smoke@test.com",
   "password": "wrongpassword"
 }
+
+
+### LOGIN TEST
+POST {{baseUrl}}/auth/staff/login
+Content-Type: application/json
+
+{
+  "email": "admin@test.com",
+  "password": "password123"
+}

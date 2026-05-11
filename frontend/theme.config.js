@@ -107,26 +107,26 @@ const theme = {
      * Then set active: "custom" above.
      */
     custom: {
-  colors: {
-    black:   "#0a1a0a",   // Verde escuro profundo
-    green:   "#009c3b",   // Verde Brasil
-    green2:  "#007a2f",   // Verde Brasil hover
-    red:     "#ffdf00",   // Amarelo Brasil
-    yellow:  "#ffdf00",   // Amarelo Brasil
-    gray:    "#0f2a1a",   // Card background
-    gray2:   "#1a3d2a",   // Input/border background
-    muted:   "#4a7a5a",   // Muted text
-  },
-  fonts: {
-    mono: ['"Courier New"', "Courier", "monospace"],
-    sans: ["Inter", "system-ui", "sans-serif"],
-  },
-  background: "#0a1a0a",
-  text: "#ffffff",
-  neonColor: "#009c3b",
-  neonShadow: "0 0 10px #009c3b, 0 0 20px #009c3b33",
-  neonShadowSm: "0 0 6px #009c3b, 0 0 12px #009c3b33",
-},
+      colors: {
+        black:   "#0a1a0a",   // Verde escuro profundo
+        green:   "#009c3b",   // Verde Brasil
+        green2:  "#007a2f",   // Verde Brasil hover
+        red:     "#ffdf00",   // Amarelo Brasil
+        yellow:  "#ffdf00",   // Amarelo Brasil
+        gray:    "#0f2a1a",   // Card background
+        gray2:   "#1a3d2a",   // Input/border background
+        muted:   "#4a7a5a",   // Muted text
+      },
+      fonts: {
+        mono: ['"Courier New"', "Courier", "monospace"],
+        sans: ["Inter", "system-ui", "sans-serif"],
+      },
+      background: "#0a1a0a",
+      text: "#ffffff",
+      neonColor: "#009c3b",
+      neonShadow: "0 0 10px #009c3b, 0 0 20px #009c3b33",
+      neonShadowSm: "0 0 6px #009c3b, 0 0 12px #009c3b33",
+    },
   },
 
 };
