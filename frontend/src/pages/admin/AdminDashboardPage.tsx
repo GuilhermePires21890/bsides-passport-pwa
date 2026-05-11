@@ -19,13 +19,11 @@ export default function AdminDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [attendeesLoading, setAttendeesLoading] = useState(false);
 
-  // Edit sponsor state
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState({ name: '', boothNumber: '' });
   const [editLoading, setEditLoading] = useState(false);
   const [editError, setEditError] = useState('');
 
-  // Password change state
   const [pwForm, setPwForm] = useState({ current: '', newPw: '', confirm: '' });
   const [pwLoading, setPwLoading] = useState(false);
   const [pwError, setPwError] = useState('');
@@ -85,10 +83,7 @@ export default function AdminDashboardPage() {
   };
 
   const handleSaveEdit = async (id: string) => {
-    if (!editForm.name.trim()) {
-      setEditError('O nome não pode estar vazio.');
-      return;
-    }
+    if (!editForm.name.trim()) { setEditError('O nome não pode estar vazio.'); return; }
     setEditLoading(true);
     setEditError('');
     try {
@@ -119,18 +114,9 @@ export default function AdminDashboardPage() {
   };
 
   const handleChangePassword = async () => {
-    if (!pwForm.current || !pwForm.newPw || !pwForm.confirm) {
-      setPwError('Preenche todos os campos.');
-      return;
-    }
-    if (pwForm.newPw !== pwForm.confirm) {
-      setPwError('As passwords não coincidem.');
-      return;
-    }
-    if (pwForm.newPw.length < 8) {
-      setPwError('A nova password deve ter pelo menos 8 caracteres.');
-      return;
-    }
+    if (!pwForm.current || !pwForm.newPw || !pwForm.confirm) { setPwError('Preenche todos os campos.'); return; }
+    if (pwForm.newPw !== pwForm.confirm) { setPwError('As passwords não coincidem.'); return; }
+    if (pwForm.newPw.length < 8) { setPwError('A nova password deve ter pelo menos 8 caracteres.'); return; }
     setPwLoading(true);
     setPwError('');
     try {
@@ -171,7 +157,7 @@ export default function AdminDashboardPage() {
       <div className="px-6 pt-10 pb-4 border-b border-brand-gray2 flex justify-between items-start">
         <div>
           <p className="font-mono text-brand-green text-xs tracking-widest mb-1">[ STAFF PANEL ]</p>
-          <h1 className="font-mono font-bold text-white text-xl">Admin — BSides Your City 2026</h1>
+          <h1 className="font-mono font-bold text-white text-xl">Admin Dashboard</h1>
         </div>
         <button onClick={() => navigate('/admin/qrcodes')}
           className="font-mono text-brand-muted text-xs border border-brand-gray2 px-3 py-1 rounded hover:border-brand-green hover:text-brand-green transition-colors">
@@ -209,8 +195,10 @@ export default function AdminDashboardPage() {
                 { label: 'Qualificados',  value: dashboard.totalQualified, icon: '🏆' },
               ].map(stat => (
                 <div key={stat.label}
-                  className="border border-brand-gray2 rounded p-5 text-center hover:border-brand-green transition-colors"
-                  style={stat.label === 'Qualificados' && stat.value > 0 ? { borderColor: '#00FF41', boxShadow: '0 0 10px #00FF4133' } : {}}>
+                  className={`border rounded p-5 text-center transition-colors
+                    ${stat.label === 'Qualificados' && stat.value > 0
+                      ? 'border-brand-green shadow-neon-sm'
+                      : 'border-brand-gray2 hover:border-brand-green'}`}>
                   <div className="text-2xl mb-2">{stat.icon}</div>
                   <p className="font-mono font-bold text-white text-2xl">{stat.value}</p>
                   <p className="font-mono text-brand-muted text-xs mt-1">{stat.label}</p>
@@ -221,11 +209,8 @@ export default function AdminDashboardPage() {
               <div className="border border-brand-gray2 rounded p-4">
                 <p className="font-mono text-brand-muted text-xs mb-2">Taxa de qualificação</p>
                 <div className="w-full bg-brand-gray rounded-full h-2">
-                  <div className="h-2 rounded-full transition-all"
-                    style={{
-                      width: `${dashboard.totalAttendees > 0 ? Math.round((dashboard.totalQualified / dashboard.totalAttendees) * 100) : 0}%`,
-                      backgroundColor: '#00FF41'
-                    }} />
+                  <div className="h-2 rounded-full bg-brand-green transition-all"
+                    style={{ width: `${dashboard.totalAttendees > 0 ? Math.round((dashboard.totalQualified / dashboard.totalAttendees) * 100) : 0}%` }} />
                 </div>
                 <p className="font-mono text-brand-green text-xs mt-2 text-right">
                   {dashboard.totalAttendees > 0 ? Math.round((dashboard.totalQualified / dashboard.totalAttendees) * 100) : 0}%
@@ -238,67 +223,50 @@ export default function AdminDashboardPage() {
         {/* SPONSORS */}
         {tab === 'sponsors' && (
           <div className="flex flex-col gap-4">
-            {/* Add sponsor form */}
             <div className="flex flex-col gap-2 border border-brand-gray2 rounded p-4">
               <p className="font-mono text-brand-green text-xs tracking-widest mb-1">{'>'} ADICIONAR SPONSOR</p>
-              <input
-                value={newSponsor.name}
+              <input value={newSponsor.name}
                 onChange={e => setNewSponsor({ ...newSponsor, name: e.target.value })}
                 onKeyDown={e => e.key === 'Enter' && handleAddSponsor()}
                 placeholder="Nome do sponsor"
                 className="bg-brand-gray text-white placeholder-brand-muted rounded px-3 py-2 text-sm font-mono outline-none border border-brand-gray2 focus:border-brand-green transition-colors" />
-              <input
-                value={newSponsor.boothNumber}
+              <input value={newSponsor.boothNumber}
                 onChange={e => setNewSponsor({ ...newSponsor, boothNumber: e.target.value })}
                 onKeyDown={e => e.key === 'Enter' && handleAddSponsor()}
                 placeholder="Nº do stand (opcional)"
                 className="bg-brand-gray text-white placeholder-brand-muted rounded px-3 py-2 text-sm font-mono outline-none border border-brand-gray2 focus:border-brand-green transition-colors" />
               <button onClick={handleAddSponsor}
-                className="font-mono font-bold py-2 rounded text-black text-xs uppercase tracking-widest active:scale-95 transition-all"
-                style={{ backgroundColor: '#00FF41', boxShadow: '0 0 10px #00FF4144' }}>
+                className="font-mono font-bold py-2 rounded text-black text-xs uppercase tracking-widest active:scale-95 transition-all bg-brand-green shadow-neon-sm hover:bg-brand-green2">
                 + Adicionar
               </button>
             </div>
 
-            {/* Sponsor list */}
             {sponsors.map(s => (
               <div key={s.id}
                 className="border border-brand-gray2 rounded p-4 hover:border-brand-green transition-colors">
-
                 {editingId === s.id ? (
-                  /* Edit mode */
                   <div className="flex flex-col gap-2">
-                    <input
-                      value={editForm.name}
+                    <input value={editForm.name}
                       onChange={e => { setEditForm({ ...editForm, name: e.target.value }); setEditError(''); }}
                       placeholder="Nome do sponsor"
                       className="bg-brand-gray text-white placeholder-brand-muted rounded px-3 py-2 text-sm font-mono outline-none border border-brand-green transition-colors" />
-                    <input
-                      value={editForm.boothNumber}
+                    <input value={editForm.boothNumber}
                       onChange={e => setEditForm({ ...editForm, boothNumber: e.target.value })}
                       placeholder="Nº do stand (opcional)"
                       className="bg-brand-gray text-white placeholder-brand-muted rounded px-3 py-2 text-sm font-mono outline-none border border-brand-gray2 focus:border-brand-green transition-colors" />
-                    {editError && (
-                      <p className="font-mono text-brand-red text-xs">{editError}</p>
-                    )}
+                    {editError && <p className="font-mono text-brand-red text-xs">{editError}</p>}
                     <div className="flex gap-2 mt-1">
-                      <button
-                        onClick={() => handleSaveEdit(s.id)}
-                        disabled={editLoading}
-                        className="flex-1 font-mono font-bold py-2 rounded text-black text-xs uppercase tracking-widest disabled:opacity-40 active:scale-95 transition-all"
-                        style={{ backgroundColor: '#00FF41' }}>
+                      <button onClick={() => handleSaveEdit(s.id)} disabled={editLoading}
+                        className="flex-1 font-mono font-bold py-2 rounded text-black text-xs uppercase tracking-widest disabled:opacity-40 active:scale-95 transition-all bg-brand-green hover:bg-brand-green2">
                         {editLoading ? 'A guardar...' : '✓ Guardar'}
                       </button>
-                      <button
-                        onClick={handleCancelEdit}
-                        disabled={editLoading}
+                      <button onClick={handleCancelEdit} disabled={editLoading}
                         className="font-mono text-brand-muted text-xs border border-brand-gray2 px-4 py-2 rounded hover:border-brand-red hover:text-brand-red transition-colors disabled:opacity-40">
                         Cancelar
                       </button>
                     </div>
                   </div>
                 ) : (
-                  /* View mode */
                   <div className="flex justify-between items-start">
                     <div className="flex-1 min-w-0">
                       <p className="font-mono font-bold text-white text-sm">{s.name}</p>
@@ -308,16 +276,12 @@ export default function AdminDashboardPage() {
                       <p className="font-mono text-brand-gray2 text-xs mt-1 truncate">{s.qrCode}</p>
                     </div>
                     <div className="flex gap-2 flex-shrink-0 ml-2">
-                      <button
-                        onClick={() => handleStartEdit(s)}
-                        className="font-mono text-brand-muted hover:text-brand-green text-sm px-2 transition-colors"
-                        title="Editar">
+                      <button onClick={() => handleStartEdit(s)}
+                        className="font-mono text-brand-muted hover:text-brand-green text-sm px-2 transition-colors" title="Editar">
                         ✎
                       </button>
-                      <button
-                        onClick={() => handleDeleteSponsor(s.id)}
-                        className="font-mono text-brand-muted hover:text-brand-red text-sm px-2 transition-colors"
-                        title="Eliminar">
+                      <button onClick={() => handleDeleteSponsor(s.id)}
+                        className="font-mono text-brand-muted hover:text-brand-red text-sm px-2 transition-colors" title="Eliminar">
                         ✕
                       </button>
                     </div>
@@ -337,14 +301,13 @@ export default function AdminDashboardPage() {
           <div className="flex flex-col gap-4">
             <div className="flex justify-between items-center">
               <p className="font-mono text-brand-muted text-xs">{attendees.length} registados</p>
-              <button
-                onClick={() => {
-                  setAttendees([]);
-                  setAttendeesLoading(true);
-                  adminApi.getAttendees(eventId)
-                    .then(res => setAttendees(res.data))
-                    .finally(() => setAttendeesLoading(false));
-                }}
+              <button onClick={() => {
+                setAttendees([]);
+                setAttendeesLoading(true);
+                adminApi.getAttendees(eventId)
+                  .then(res => setAttendees(res.data))
+                  .finally(() => setAttendeesLoading(false));
+              }}
                 className="font-mono text-brand-muted text-xs border border-brand-gray2 px-3 py-1 rounded hover:border-brand-green hover:text-brand-green transition-colors">
                 ↻ Actualizar
               </button>
@@ -360,27 +323,19 @@ export default function AdminDashboardPage() {
               const isQualified = totalSponsors > 0 && stampsCount >= totalSponsors;
               return (
                 <div key={a.id}
-                  className="border rounded p-4"
-                  style={{
-                    borderColor: isQualified ? '#00FF41' : '#2A2A2A',
-                    boxShadow: isQualified ? '0 0 6px #00FF4122' : 'none'
-                  }}>
+                  className={`border rounded p-4 transition-colors
+                    ${isQualified ? 'border-brand-green shadow-neon-sm' : 'border-brand-gray2'}`}>
                   <div className="flex justify-between items-start">
                     <div className="flex-1 min-w-0">
                       <p className="font-mono font-bold text-white text-sm">
                         {isQualified ? '✓ ' : ''}{a.name}
                       </p>
                       <p className="font-mono text-brand-muted text-xs mt-1">{a.email}</p>
-                      {a.company && (
-                        <p className="font-mono text-brand-muted text-xs">{a.company}</p>
-                      )}
-                      <p className="font-mono text-brand-muted text-xs mt-2">
-                        {formatDate(a.createdAt)}
-                      </p>
+                      {a.company && <p className="font-mono text-brand-muted text-xs">{a.company}</p>}
+                      <p className="font-mono text-brand-muted text-xs mt-2">{formatDate(a.createdAt)}</p>
                     </div>
                     <div className="text-right flex-shrink-0 ml-3">
-                      <p className="font-mono text-xs"
-                        style={{ color: isQualified ? '#00FF41' : '#888888' }}>
+                      <p className={`font-mono text-xs ${isQualified ? 'text-brand-green' : 'text-brand-muted'}`}>
                         {stampsCount}/{totalSponsors}
                       </p>
                       <p className="font-mono text-brand-muted text-xs">stamps</p>
@@ -404,16 +359,13 @@ export default function AdminDashboardPage() {
             <div className="flex justify-between items-center">
               <p className="font-mono text-brand-muted text-xs">{qualified.length} qualificados</p>
               <button onClick={handleExport}
-                className="font-mono font-bold text-xs px-4 py-2 rounded text-black uppercase tracking-wider active:scale-95 transition-all"
-                style={{ backgroundColor: '#00FF41', boxShadow: '0 0 10px #00FF4144' }}>
+                className="font-mono font-bold text-xs px-4 py-2 rounded text-black uppercase tracking-wider active:scale-95 transition-all bg-brand-green shadow-neon-sm hover:bg-brand-green2">
                 Exportar CSV
               </button>
             </div>
 
             {qualified.map(a => (
-              <div key={a.id}
-                className="border border-brand-green rounded p-4"
-                style={{ boxShadow: '0 0 6px #00FF4122' }}>
+              <div key={a.id} className="border border-brand-green rounded p-4 shadow-neon-sm">
                 <p className="font-mono font-bold text-white text-sm">✓ {a.name}</p>
                 <p className="font-mono text-brand-muted text-xs mt-1">{a.email}</p>
                 {a.company && <p className="font-mono text-brand-muted text-xs">{a.company}</p>}
@@ -457,15 +409,13 @@ export default function AdminDashboardPage() {
             {pwError && <p className="font-mono text-brand-red text-sm">{pwError}</p>}
 
             {pwSuccess && (
-              <div className="border border-brand-green rounded p-3"
-                style={{ boxShadow: '0 0 10px #00FF4122' }}>
+              <div className="border border-brand-green rounded p-3 shadow-neon-sm">
                 <p className="font-mono text-brand-green text-sm">✓ Password alterada com sucesso.</p>
               </div>
             )}
 
             <button onClick={handleChangePassword} disabled={pwLoading}
-              className="w-full font-mono font-bold py-4 rounded text-black text-sm uppercase tracking-widest disabled:opacity-40 active:scale-95 transition-all border-2"
-              style={{ backgroundColor: '#00FF41', borderColor: '#00FF41', boxShadow: '0 0 16px #00FF4555' }}>
+              className="w-full font-mono font-bold py-4 rounded text-black text-sm uppercase tracking-widest disabled:opacity-40 active:scale-95 transition-all border-2 bg-brand-green border-brand-green shadow-neon hover:bg-brand-green2 hover:border-brand-green2">
               {pwLoading ? '> A alterar...' : '> Alterar password'}
             </button>
           </div>

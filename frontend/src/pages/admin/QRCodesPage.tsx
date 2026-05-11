@@ -23,7 +23,6 @@ export default function QRCodesPage() {
     }).then(async res => {
       const list: Sponsor[] = res.data;
       setSponsors(list);
-
       const images: Record<string, string> = {};
       for (const s of list) {
         images[s.id] = await QRCode.toDataURL(s.qrCode, {
@@ -59,10 +58,7 @@ export default function QRCodesPage() {
             padding: 40px;
             box-sizing: border-box;
           }
-          .print-page:last-child {
-            page-break-after: avoid;
-            break-after: avoid;
-          }
+          .print-page:last-child { page-break-after: avoid; break-after: avoid; }
           .screen-only { display: none !important; }
         }
         @media screen {
@@ -72,7 +68,6 @@ export default function QRCodesPage() {
 
       <div className="min-h-screen bg-brand-black">
 
-        {/* Header */}
         <div className="no-print px-6 pt-8 pb-4 border-b border-brand-gray2 flex justify-between items-center">
           <div>
             <p className="font-mono text-brand-green text-xs tracking-widest mb-1">[ QR CODES ]</p>
@@ -85,20 +80,17 @@ export default function QRCodesPage() {
               ← Voltar
             </button>
             <button onClick={() => window.print()}
-              className="font-mono font-bold text-xs px-4 py-2 rounded text-black uppercase tracking-wider"
-              style={{ backgroundColor: '#00FF41', boxShadow: '0 0 10px #00FF4144' }}>
-              🖨️ Imprimir
+              className="font-mono font-bold text-xs px-4 py-2 rounded text-black uppercase tracking-wider bg-brand-green shadow-neon-sm hover:bg-brand-green2">
+              Imprimir
             </button>
           </div>
         </div>
 
-        {/* Screen preview */}
         <div className="screen-only p-8 flex flex-col gap-8 items-center">
           {sponsors.map(sponsor => (
             <div key={sponsor.id}
-              className="border-2 border-brand-green rounded-lg p-8 flex flex-col items-center text-center w-full max-w-sm"
-              style={{ boxShadow: '0 0 15px #00FF4133' }}>
-              <p className="font-mono text-brand-green text-xs tracking-widest mb-1">BSides Your City 2026</p>
+              className="border-2 border-brand-green rounded-lg p-8 flex flex-col items-center text-center w-full max-w-sm shadow-neon">
+              <p className="font-mono text-brand-green text-xs tracking-widest mb-1">Event Passport</p>
               <h2 className="font-mono font-bold text-white text-2xl mb-1">{sponsor.name}</h2>
               {sponsor.boothNumber && (
                 <p className="font-mono text-brand-muted text-sm mb-4">Stand {sponsor.boothNumber}</p>
@@ -109,17 +101,16 @@ export default function QRCodesPage() {
                 </div>
               )}
               <p className="font-mono text-brand-muted text-xs leading-relaxed">
-                Scana o QR code com o teu<br />Passport BSides 2026
+                Scana o QR code com o teu Passport
               </p>
             </div>
           ))}
         </div>
 
-        {/* Print layout — 1 per page */}
         {sponsors.map(sponsor => (
           <div key={`print-${sponsor.id}`} className="print-page">
             <p style={{ fontFamily: 'monospace', fontSize: '13px', letterSpacing: '4px', color: '#555', marginBottom: '12px', textTransform: 'uppercase' }}>
-              BSides Your City 2026
+              Event Passport
             </p>
             <h2 style={{ fontFamily: 'monospace', fontWeight: 'bold', fontSize: '40px', marginBottom: '8px', color: '#000', textAlign: 'center' }}>
               {sponsor.name}
@@ -135,7 +126,7 @@ export default function QRCodesPage() {
               </div>
             )}
             <p style={{ fontFamily: 'monospace', fontSize: '15px', color: '#555', textAlign: 'center', lineHeight: '1.8' }}>
-              Scana o QR code com o teu<br />Passport BSides 2026
+              Scana o QR code com o teu Passport
             </p>
             <p style={{ fontFamily: 'monospace', fontSize: '9px', color: '#bbb', marginTop: '20px', textAlign: 'center' }}>
               {sponsor.qrCode}

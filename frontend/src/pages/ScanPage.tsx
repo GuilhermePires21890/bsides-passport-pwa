@@ -29,8 +29,6 @@ export default function ScanPage() {
     const scanner = new Html5Qrcode('qr-reader');
     scannerRef.current = scanner;
 
-    // Use facingMode 'environment' directly — works on iOS Safari and Android
-    // without relying on camera labels which are unreliable on mobile
     scanner.start(
       { facingMode: 'environment' },
       { fps: 10, qrbox: { width: 250, height: 250 } },
@@ -43,7 +41,6 @@ export default function ScanPage() {
           setSponsorName(res.data.sponsorName);
           setProgress(res.data.progress);
           setStatus('success');
-          // Auto-redirect to passport after 2.5s, or to qualified if completed
           if (res.data.qualified) {
             setTimeout(() => navigate('/qualified'), 2000);
           } else {
@@ -81,7 +78,6 @@ export default function ScanPage() {
   return (
     <div className="min-h-screen flex flex-col bg-brand-black">
 
-      {/* Header */}
       <div className="px-6 pt-10 pb-4 border-b border-brand-gray2">
         <button onClick={() => { scannerRef.current?.stop().catch(() => {}); navigate('/passport'); }}
           className="font-mono text-brand-green text-sm mb-4 block hover:text-white transition-colors">
@@ -92,21 +88,18 @@ export default function ScanPage() {
         <p className="font-mono text-brand-muted text-sm mt-1">{t('scan.instruction')}</p>
       </div>
 
-      {/* Scanning */}
       {status === 'scanning' && (
         <div className="flex-1 flex flex-col items-center justify-center px-6 py-8">
           <div id="qr-reader"
-            className="w-full max-w-sm rounded overflow-hidden border-2 border-brand-green"
-            style={{ minHeight: '300px', boxShadow: '0 0 20px #00FF4133' }} />
+            className="w-full max-w-sm rounded overflow-hidden border-2 border-brand-green shadow-neon"
+            style={{ minHeight: '300px' }} />
           <p className="font-mono text-brand-muted text-xs mt-4 text-center">{t('scan.instruction')}</p>
         </div>
       )}
 
-      {/* Success */}
       {status === 'success' && (
         <div className="flex-1 flex flex-col items-center justify-center px-6 text-center gap-4">
-          <div className="border-2 border-brand-green rounded p-8 w-full max-w-xs"
-            style={{ boxShadow: '0 0 30px #00FF4144' }}>
+          <div className="border-2 border-brand-green rounded p-8 w-full max-w-xs shadow-neon">
             <p className="font-mono text-brand-green text-4xl mb-3">✓</p>
             <h2 className="font-mono font-bold text-white text-xl mb-2">{t('scan.success')}</h2>
             <p className="font-mono text-brand-green font-bold text-lg">{sponsorName}</p>
@@ -120,30 +113,25 @@ export default function ScanPage() {
             </p>
           </div>
           <button onClick={() => navigate('/passport')}
-            className="w-full max-w-xs font-mono font-bold py-4 rounded text-black text-sm uppercase tracking-widest active:scale-95 transition-all border-2"
-            style={{ backgroundColor: '#00FF41', borderColor: '#00FF41', boxShadow: '0 0 16px #00FF4555' }}>
+            className="w-full max-w-xs font-mono font-bold py-4 rounded text-black text-sm uppercase tracking-widest active:scale-95 transition-all border-2 bg-brand-green border-brand-green shadow-neon hover:bg-brand-green2 hover:border-brand-green2">
             {'>'} {t('scan.back')}
           </button>
         </div>
       )}
 
-      {/* Duplicate */}
       {status === 'duplicate' && (
         <div className="flex-1 flex flex-col items-center justify-center px-6 text-center gap-4">
-          <div className="border-2 border-brand-yellow rounded p-8 w-full max-w-xs"
-            style={{ boxShadow: '0 0 20px #FFD70033' }}>
+          <div className="border-2 border-brand-yellow rounded p-8 w-full max-w-xs">
             <p className="font-mono text-brand-yellow text-4xl mb-3">⚠</p>
             <h2 className="font-mono font-bold text-white text-xl">{t('scan.already_scanned')}</h2>
           </div>
           <button onClick={() => navigate('/passport')}
-            className="w-full max-w-xs font-mono font-bold py-4 rounded text-black text-sm uppercase tracking-widest active:scale-95 transition-all border-2"
-            style={{ backgroundColor: '#00FF41', borderColor: '#00FF41', boxShadow: '0 0 16px #00FF4555' }}>
+            className="w-full max-w-xs font-mono font-bold py-4 rounded text-black text-sm uppercase tracking-widest active:scale-95 transition-all border-2 bg-brand-green border-brand-green shadow-neon hover:bg-brand-green2 hover:border-brand-green2">
             {'>'} {t('scan.back')}
           </button>
         </div>
       )}
 
-      {/* Error / Manual input */}
       {status === 'error' && (
         <div className="flex-1 flex flex-col items-center justify-center px-6 text-center gap-4">
           <div className="border border-brand-gray2 rounded p-6 w-full max-w-xs">
@@ -158,8 +146,7 @@ export default function ScanPage() {
                 const input = document.getElementById('qr-input') as HTMLInputElement;
                 handleManualScan(input?.value.trim());
               }}
-              className="w-full font-mono font-bold py-3 rounded text-black text-xs uppercase tracking-widest active:scale-95 transition-all"
-              style={{ backgroundColor: '#00FF41', boxShadow: '0 0 10px #00FF4144' }}>
+              className="w-full font-mono font-bold py-3 rounded text-black text-xs uppercase tracking-widest active:scale-95 transition-all bg-brand-green shadow-neon-sm hover:bg-brand-green2">
               {'>'} Confirmar
             </button>
           </div>

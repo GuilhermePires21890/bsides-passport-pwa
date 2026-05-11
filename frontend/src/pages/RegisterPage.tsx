@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { authApi, eventsApi } from '../services/api';
 
-// Common email domains for typo detection
 const COMMON_DOMAINS = [
   'gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com',
   'sapo.pt', 'hotmail.pt', 'live.com', 'icloud.com',
@@ -27,16 +26,12 @@ function detectEmailTypo(email: string): string | null {
   const parts = email.split('@');
   if (parts.length !== 2) return null;
   const domain = parts[1].toLowerCase();
-  if (COMMON_DOMAINS.includes(domain)) return null; // already correct
-
+  if (COMMON_DOMAINS.includes(domain)) return null;
   let closest: string | null = null;
   let minDist = Infinity;
   for (const d of COMMON_DOMAINS) {
     const dist = levenshtein(domain, d);
-    if (dist < minDist && dist <= 2) { // max 2 char difference
-      minDist = dist;
-      closest = d;
-    }
+    if (dist < minDist && dist <= 2) { minDist = dist; closest = d; }
   }
   return closest ? `${parts[0]}@${closest}` : null;
 }
@@ -58,7 +53,6 @@ export default function RegisterPage() {
 
   const handleEmailChange = (value: string) => {
     setForm({ ...form, email: value });
-    // Only check when email looks complete (has @ and domain with .)
     if (value.includes('@') && value.split('@')[1]?.includes('.')) {
       setEmailSuggestion(detectEmailTypo(value));
     } else {
@@ -77,7 +71,6 @@ export default function RegisterPage() {
       setError('Preenche o nome, email e aceita os termos.');
       return;
     }
-    // Block submit if there's a suggestion pending — force user to decide
     if (emailSuggestion) {
       setError('Confirma o teu email antes de continuar.');
       return;
@@ -102,8 +95,7 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen flex flex-col px-6 py-10 bg-brand-black relative">
-      <div className="absolute inset-0 opacity-5"
-        style={{ backgroundImage: 'linear-gradient(#00FF41 1px, transparent 1px), linear-gradient(90deg, #00FF41 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+      <div className="absolute inset-0 opacity-5 bg-grid-brand" />
 
       <div className="relative z-10 w-full max-w-md">
         <button onClick={() => navigate('/')} className="font-mono text-brand-green text-sm mb-8 block hover:text-white transition-colors">
@@ -112,7 +104,7 @@ export default function RegisterPage() {
 
         <p className="font-mono text-brand-green text-xs tracking-widest mb-1">[ REGISTO ]</p>
         <h1 className="font-mono font-bold text-white text-2xl mb-1">{t('register.title')}</h1>
-        <p className="font-mono text-brand-muted text-sm mb-8">BSides Your City 2026</p>
+        <p className="font-mono text-brand-muted text-sm mb-8">{t('landing.title', 'Event Passport')}</p>
 
         <div className="flex flex-col gap-4">
           <div>
@@ -124,30 +116,21 @@ export default function RegisterPage() {
 
           <div>
             <label className="font-mono text-brand-green text-xs mb-1 block">{'>'} {t('register.email')} *</label>
-            <input
-              type="email"
-              placeholder={t('register.email_placeholder')}
-              value={form.email}
+            <input type="email" placeholder={t('register.email_placeholder')} value={form.email}
               onChange={e => handleEmailChange(e.target.value)}
               className={`w-full bg-brand-gray text-white placeholder-brand-muted rounded px-4 py-3 text-sm font-mono outline-none border transition-colors
-                ${emailSuggestion ? 'border-brand-yellow' : 'border-brand-gray2 focus:border-brand-green'}`}
-            />
-            {/* Typo suggestion */}
+                ${emailSuggestion ? 'border-brand-yellow' : 'border-brand-gray2 focus:border-brand-green'}`} />
             {emailSuggestion && (
-              <div className="mt-2 border border-brand-yellow rounded px-3 py-2 flex items-center justify-between gap-2"
-                style={{ boxShadow: '0 0 8px #FFD70022' }}>
+              <div className="mt-2 border border-brand-yellow rounded px-3 py-2 flex items-center justify-between gap-2">
                 <p className="font-mono text-brand-yellow text-xs">
                   ⚠ Quiseste dizer <span className="font-bold">{emailSuggestion}</span>?
                 </p>
                 <div className="flex gap-2 flex-shrink-0">
-                  <button
-                    onClick={applyEmailSuggestion}
-                    className="font-mono text-xs px-2 py-1 rounded text-black font-bold"
-                    style={{ backgroundColor: '#FFD700' }}>
+                  <button onClick={applyEmailSuggestion}
+                    className="font-mono text-xs px-2 py-1 rounded text-black font-bold bg-brand-yellow">
                     Sim
                   </button>
-                  <button
-                    onClick={() => setEmailSuggestion(null)}
+                  <button onClick={() => setEmailSuggestion(null)}
                     className="font-mono text-xs px-2 py-1 rounded text-brand-muted border border-brand-gray2 hover:text-white transition-colors">
                     Não
                   </button>
@@ -163,7 +146,6 @@ export default function RegisterPage() {
               className="w-full bg-brand-gray text-white placeholder-brand-muted rounded px-4 py-3 text-sm font-mono outline-none border border-brand-gray2 focus:border-brand-green transition-colors" />
           </div>
 
-          {/* RGPD */}
           <div className="border border-brand-gray2 rounded p-4 flex flex-col gap-3 mt-2">
             <label className="flex items-start gap-3 cursor-pointer">
               <input type="checkbox" checked={form.rgpdConsent}
@@ -182,8 +164,7 @@ export default function RegisterPage() {
           {error && <p className="font-mono text-brand-red text-sm">{error}</p>}
 
           <button onClick={handleSubmit} disabled={loading || !eventId}
-            className="w-full font-mono font-bold py-4 rounded text-black text-sm uppercase tracking-widest mt-2 disabled:opacity-40 active:scale-95 transition-all border-2"
-            style={{ backgroundColor: '#00FF41', borderColor: '#00FF41', boxShadow: '0 0 16px #00FF4155' }}>
+            className="w-full font-mono font-bold py-4 rounded text-black text-sm uppercase tracking-widest mt-2 disabled:opacity-40 active:scale-95 transition-all border-2 bg-brand-green border-brand-green shadow-neon hover:bg-brand-green2 hover:border-brand-green2">
             {loading ? '> A processar...' : `> ${t('register.submit')}`}
           </button>
 

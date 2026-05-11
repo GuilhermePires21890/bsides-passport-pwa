@@ -45,22 +45,19 @@ export default function PassportPage() {
   return (
     <div className="min-h-screen flex flex-col bg-brand-black pb-28">
 
-    {/* Header */}
-    <div className="px-6 pt-10 pb-5 border-b border-brand-gray2 flex justify-between items-start">
-      <div>
-        <p className="font-mono text-brand-green text-xs tracking-widest mb-1">[ PASSPORT ]</p>
-        <h1 className="font-mono font-bold text-white text-2xl">BSides Your City 2026</h1>
-        <p className="font-mono text-brand-green text-sm mt-1">{attendee.name}</p>
+      {/* Header */}
+      <div className="px-6 pt-10 pb-5 border-b border-brand-gray2 flex justify-between items-start">
+        <div>
+          <p className="font-mono text-brand-green text-xs tracking-widest mb-1">[ PASSPORT ]</p>
+          <h1 className="font-mono font-bold text-white text-2xl">{t('landing.title', 'Event Passport')}</h1>
+          <p className="font-mono text-brand-green text-sm mt-1">{attendee.name}</p>
+        </div>
+        <button
+          onClick={() => { sessionStorage.removeItem('passport_token'); navigate('/'); }}
+          className="font-mono text-brand-muted text-xs border border-brand-gray2 px-3 py-1 rounded hover:border-brand-red hover:text-brand-red transition-colors">
+          Sair
+        </button>
       </div>
-      <button
-        onClick={() => {
-          sessionStorage.removeItem('passport_token');
-          navigate('/');
-        }}
-        className="font-mono text-brand-muted text-xs border border-brand-gray2 px-3 py-1 rounded hover:border-brand-red hover:text-brand-red transition-colors">
-        Sair
-      </button>
-    </div>
 
       {/* Progress */}
       <div className="px-6 py-5 border-b border-brand-gray2">
@@ -71,12 +68,11 @@ export default function PassportPage() {
           <span className="font-mono text-brand-green font-bold text-sm">{pct}%</span>
         </div>
         <div className="w-full bg-brand-gray2 rounded-full h-2">
-          <div className="h-2 rounded-full transition-all duration-700"
-            style={{ width: `${pct}%`, backgroundColor: '#00FF41', boxShadow: pct > 0 ? '0 0 8px #00FF41' : 'none' }} />
+          <div className="h-2 rounded-full bg-brand-green transition-all duration-700 shadow-neon-sm"
+            style={{ width: `${pct}%` }} />
         </div>
         {qualified && (
-          <div className="mt-3 border border-brand-green rounded p-3 text-center"
-            style={{ boxShadow: '0 0 12px #00FF4133' }}>
+          <div className="mt-3 border border-brand-green rounded p-3 text-center shadow-neon">
             <p className="font-mono text-brand-green text-sm font-bold">
               ✓ {t('passport.qualified')}
             </p>
@@ -94,11 +90,9 @@ export default function PassportPage() {
             <div key={sponsor.id}
               className={`flex items-center gap-4 rounded px-4 py-4 border transition-all
                 ${sponsor.stamped
-                  ? 'border-brand-green bg-brand-gray'
-                  : 'border-brand-gray2 bg-brand-gray'}`}
-              style={sponsor.stamped ? { boxShadow: '0 0 8px #00FF4133' } : {}}>
+                  ? 'border-brand-green bg-brand-gray shadow-neon-sm'
+                  : 'border-brand-gray2 bg-brand-gray'}`}>
 
-              {/* Status indicator */}
               <div className={`w-8 h-8 rounded flex items-center justify-center font-mono text-sm flex-shrink-0 border
                 ${sponsor.stamped ? 'border-brand-green text-brand-green' : 'border-brand-gray2 text-brand-muted'}`}>
                 {sponsor.stamped ? '✓' : '○'}
@@ -124,8 +118,7 @@ export default function PassportPage() {
       {/* Scan button fixed bottom */}
       <div className="fixed bottom-0 left-0 right-0 px-6 py-4 bg-brand-black border-t border-brand-gray2">
         <button onClick={() => navigate('/scan')}
-          className="w-full font-mono font-bold py-4 rounded text-black text-sm uppercase tracking-widest active:scale-95 transition-all border-2"
-          style={{ backgroundColor: '#00FF41', borderColor: '#00FF41', boxShadow: '0 0 20px #00FF4155' }}>
+          className="w-full font-mono font-bold py-4 rounded text-black text-sm uppercase tracking-widest active:scale-95 transition-all border-2 bg-brand-green border-brand-green shadow-neon hover:bg-brand-green2 hover:border-brand-green2">
           {'>'} {t('passport.scan_cta')}
         </button>
       </div>
