@@ -1,16 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+:root {
+  --color-primary: #d946ef;
+  --color-primary-hover: #a21caf;
+  --color-bg: #0d0d0d;
+  --color-text: #ffffff;
+  --neon-shadow: 0 0 10px #d946ef, 0 0 20px #d946ef33;
+}
 
 * { box-sizing: border-box; }
 
 body {
   margin: 0;
   font-family: 'Inter', system-ui, sans-serif;
-  background-color: #000000;
-  color: #ffffff;
+  background-color: var(--color-bg);
+  color: var(--color-text);
   min-height: 100vh;
 }
 
@@ -20,13 +28,12 @@ body {
   flex-direction: column;
 }
 
-/* Neon glow effects */
 .neon-text {
-  color: #00FF41;
-  text-shadow: 0 0 10px #00FF41, 0 0 20px #00FF4133;
+  color: var(--color-primary);
+  text-shadow: var(--neon-shadow);
 }
 
 .neon-border {
-  border-color: #00FF41;
-  box-shadow: 0 0 8px #00FF4166;
+  border-color: var(--color-primary);
+  box-shadow: var(--neon-shadow);
 }
