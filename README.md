@@ -1,7 +1,7 @@
 # 🎫 Event Passport PWA
 
 > Open-source sponsor engagement system for tech events.  
-> Attendees scan QR codes at sponsor booths, collect digital stamps, and qualify for prizes — no app install required.
+> Attendees scan QR codes at sponsor booths, collect digital stamps, and qualify for prizes - no app install required.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Stack: NestJS + React](https://img.shields.io/badge/stack-NestJS%20%2B%20React-red.svg)]()
@@ -11,14 +11,14 @@
 
 ## ✨ Features
 
-- 📱 **PWA** — works on any mobile browser, no app install
-- 🔲 **QR stamp collection** — attendees scan at sponsor booths
-- 🏆 **Leaderboard & prize qualification** — configurable stamp threshold
-- 👤 **Frictionless registration** — name + email, no password for attendees
-- 🔗 **Session resume** — personal link to recover passport anytime
-- 🛡️ **Staff/admin panel** — manage sponsors, view dashboard, export CSV
-- 🌍 **i18n ready** — PT / EN / ES included out of the box
-- ⚙️ **Fully configurable** — event name, dates, stamps required, all via env vars
+- 📱 **PWA**  works on any mobile browser, no app install
+- 🔲 **QR stamp collection** - attendees scan at sponsor booths
+- 🏆 **Leaderboard & prize qualification** - configurable stamp threshold
+- 👤 **Frictionless registration** - name + email, no password for attendees
+- 🔗 **Session resume** - personal link to recover passport anytime
+- 🛡️ **Staff/admin panel** - manage sponsors, view dashboard, export CSV
+- 🌍 **i18n ready** - PT / EN / ES included out of the box
+- ⚙️ **Fully configurable** - event name, dates, stamps required, all via env vars
 
 ---
 
@@ -128,7 +128,7 @@ All event-specific config is controlled via environment variables in `backend/.e
 | `EVENT_EDITION` | Edition year | `"2026"` |
 | `EVENT_CITY` | City name | `"Your City"` |
 | `EVENT_DATE` | Event dates | `"Jun 26-27, 2026"` |
-| `EVENT_VENUE` | Venue name | `"ISEP"` |
+| `EVENT_VENUE` | Venue name | `"Your Venue"` |
 | `EVENT_URL` | Event website | `"https://yourevent.example.pt"` |
 | `STAMPS_REQUIRED` | Stamps needed for prize | `5` |
 | `MAX_STAMPS` | Max stamps per attendee | `10` |
@@ -169,11 +169,11 @@ Key fields to update:
 
 ### 2. Update colours
 
-Edit `frontend/tailwind.config.js` — look for the `brand` colour palette.
+Edit `frontend/tailwind.config.js` - look for the `brand` colour palette.
 
 ### 3. Update event metadata
 
-Edit `frontend/index.html` — update `<title>` and `<meta>` tags.
+Edit `frontend/index.html` - update `<title>` and `<meta>` tags.
 
 ---
 
@@ -181,13 +181,13 @@ Edit `frontend/index.html` — update `<title>` and `<meta>` tags.
 
 | Method | Endpoint | Auth | Description |
 |---|---|---|---|
-| POST | `/api/auth/register` | — | Register attendee |
-| GET | `/api/auth/resume?token=` | — | Resume session by token |
-| POST | `/api/auth/staff/login` | — | Staff login |
-| GET | `/api/events/active` | — | Get active event |
+| POST | `/api/auth/register` | - | Register attendee |
+| GET | `/api/auth/resume?token=` | - | Resume session by token |
+| POST | `/api/auth/staff/login` | - | Staff login |
+| GET | `/api/events/active` | - | Get active event |
 | GET | `/api/stamps/passport?token=` | Attendee | Get passport state |
 | POST | `/api/stamps/scan` | Attendee | Scan QR code |
-| GET | `/api/sponsors?eventId=` | — | List sponsors |
+| GET | `/api/sponsors?eventId=` | - | List sponsors |
 | POST | `/api/sponsors` | Staff | Create sponsor |
 | DELETE | `/api/sponsors/:id` | Staff | Delete sponsor |
 | GET | `/api/admin/dashboard?eventId=` | Staff | Dashboard stats |
@@ -201,8 +201,8 @@ Edit `frontend/index.html` — update `<title>` and `<meta>` tags.
 1. Fork this repo
 2. Create a new project on [Railway](https://railway.app)
 3. Add a PostgreSQL service
-4. Add your backend repo as a service — set Root Directory to `/backend`
-5. Add your frontend repo as a service — set Root Directory to `/frontend`
+4. Add your backend repo as a service - set Root Directory to `/backend`
+5. Add your frontend repo as a service - set Root Directory to `/frontend`
 6. Set all environment variables from `.env.example`
 7. Run migrations: add start command `npx prisma migrate deploy && node dist/main`
 
@@ -249,8 +249,8 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## 📄 License
 
-MIT — free to use, modify, and distribute.
+MIT - free to use, modify, and distribute.
 
 
 
-Built by [Guilherme Pires](https://github.com/GuilhermePires21890) — Solution Architect at [Cross Intel](https://cross-intel.com)
+Built by [Guilherme Pires](https://github.com/GuilhermePires21890) - Solution Architect at [Cross Intel](https://cross-intel.com)
